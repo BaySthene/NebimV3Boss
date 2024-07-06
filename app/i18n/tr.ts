@@ -1,4 +1,4 @@
-const en = {
+const tr = {
   common: {
     ok: "OK!",
     cancel: "Cancel",
@@ -30,26 +30,46 @@ const en = {
   errors: {
     invalidEmail: "Invalid email address.",
   },
+
+
   loginScreen: {
-    changeAccount: 'Sign in another account',
-    welcomeText: 'Welcome To Nebim V3 Portal',
-    language: 'Türkçe',
+    changeAccount: 'Farklı bir hesaba giriş yap',
+    welcomeText: 'Nebim V3 Portal\'a Hoşgeldin',
+    language: 'English',
     enterDetails:
       "Enter your details below to unlock top secret info. You'll never guess what we've got waiting. Or maybe you will; it's not rocket science here.",
-    emailFieldLabel: "Email",
-    passwordFieldLabel: "Password",
-    vknFieldLabel: 'Tax Number / National ID',
-    vknFieldPlaceholder: "Enter your tax number / national ID",
-    firstNameLabel: 'First Name',
-    firstNamePlaceholder: 'Please type your first name',
-    lastNameLabel: 'Last Name',
-    lastNamePlaceholder: 'Please tpye your last name',
-    emailFieldPlaceholder: "Enter your email address",
-    passwordFieldPlaceholder: "Super secret password here",
-    tapToSignIn: "Sign In",
-    tapToSignInOrSignUp: "Sign In / Sign Up",
+    emailFieldLabel: "E-Posta",
+    passwordFieldLabel: "Şifre",
+    vknFieldLabel: 'Vergi Kimlik Numarası / T.C Kimlik Numarası',
+    vknFieldPlaceholder: 'Lütfen vergi kimlik numarası / T.C kimlik numarası girin',
+    firstNameLabel: 'İsim',
+    firstNamePlaceholder: 'Lütfen isim girin',
+    lastNameLabel: 'Soyisim',
+    lastNamePlaceholder: 'Lütfen soyisim girin',
+    emailFieldPlaceholder: "E-posta adresinizi girin",
+    passwordFieldPlaceholder: "Lütfen şifrenizi girin",
+    tapToSignIn: "Giriş Yap",
+    tapToSignInOrSignUp: "Giriş Yap / Kayıt Ol",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
+
+  widgets: {
+    daily: "Günlük",
+    weekly: "Haftalık",
+    monthly: "Aylık",
+    yearly: "Yıllık",
+    salesOverView: {
+      title: "Satışlara Genel Bakış",
+
+    }
+
+  },
+
+
+
+
+
+
   demoNavigator: {
     componentsTab: "Components",
     debugTab: "Debug",
@@ -130,5 +150,5 @@ const en = {
   },
 }
 
-export default en
-export type Translations = typeof en
+export default tr
+export type Translations = typeof tr

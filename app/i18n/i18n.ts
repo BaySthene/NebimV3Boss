@@ -7,15 +7,16 @@ import en, { Translations } from "./en"
 import ar from "./ar"
 import ko from "./ko"
 import fr from "./fr"
+import tr from "app/i18n/tr"
 
 i18n.fallbacks = true
 
 // to use regional locales use { "en-US": enUS } etc
-i18n.translations = { ar, en, "en-US": en, ko, fr }
+i18n.translations = { ar, en, "en-US": en, ko, fr, tr }
 
-const fallbackLocale = "en-US"
+const fallbackLocale = "tr-TR"
 const systemLocale = Localization.getLocales()[0]
-const systemLocaleTag = systemLocale?.languageTag ?? "en-US"
+const systemLocaleTag = systemLocale?.languageTag ?? "tr-TR"
 
 if (Object.prototype.hasOwnProperty.call(i18n.translations, systemLocaleTag)) {
   // if specific locales like en-FI or en-US is available, set it

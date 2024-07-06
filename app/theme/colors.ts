@@ -8,8 +8,9 @@ const palette = {
   neutral500: "#978F8A",
   neutral600: "#564E4A",
   neutral700: "#3C3836",
-  neutral800: "#191015",
+  neutral800: "#2A3547",
   neutral900: "#000000",
+  neutralCustom1: "rgb(236, 242, 255)",
 
   primary100: "#F4E0D9",
   primary200: "#E8C1B4",
@@ -35,6 +36,9 @@ const palette = {
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
+  chart1: "rgba(93, 135, 255, 0.85)",
+  chart2: "rgba(93, 135, 255, 0.5)",
+  chart3: "rgba(93, 135, 255, 0)",
 } as const
 
 export const colors = {
@@ -60,6 +64,8 @@ export const colors = {
    * The default color of the screen background.
    */
   background: palette.neutral200,
+  cardBackground: palette.neutral100,
+  bannerBackground: palette.neutralCustom1,
   /**
    * The default border color.
    */
@@ -81,4 +87,8 @@ export const colors = {
    *
    */
   errorBackground: palette.angry100,
+
+  chartPrimary: palette.chart1,
+  chartPrimaryLowOpacity: palette.chart2,
+  chartPrimaryVeryLowOpacity: palette.chart3,
 }

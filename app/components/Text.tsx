@@ -93,7 +93,7 @@ const $baseStyle: StyleProp<TextStyle> = [
   { color: colors.text },
 ]
 
-const $presets = {
+export const $presets = {
   default: $baseStyle,
 
   bold: [$baseStyle, $fontWeightStyles.bold] as StyleProp<TextStyle>,

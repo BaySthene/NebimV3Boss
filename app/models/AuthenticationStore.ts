@@ -5,11 +5,18 @@ export const AuthenticationStoreModel = types
   .props({
     authToken: types.maybe(types.string),
     authEmail: "",
+    isAuthenticatedP: types.maybe(types.boolean),
+    authTaxId: types.maybe(types.number),
+    authUserId: types.maybe(types.string),
   })
   .views((store) => ({
     get isAuthenticated() {
+      return store.isAuthenticatedP
+    },
+    get isRegistered() {
       return !!store.authToken
     },
+
     get validationError() {
       if (store.authEmail.length === 0) return "can't be blank"
       if (store.authEmail.length < 6) return "must be at least 6 characters"
@@ -22,11 +29,14 @@ export const AuthenticationStoreModel = types
     setAuthToken(value?: string) {
       store.authToken = value
     },
+    setIsAuthenticated(value: boolean ) {
+      store.isAuthenticatedP = value
+    },
     setAuthEmail(value: string) {
       store.authEmail = value.replace(/ /g, "")
     },
     logout() {
-      store.authToken = undefined
+      store.isAuthenticatedP = false
       store.authEmail = ""
     },
   }))

@@ -26,3 +26,11 @@ import { TxKeyPath } from "./i18n"
 export function translate(key: TxKeyPath, options?: i18n.TranslateOptions): string {
   return i18n.t(key, options)
 }
+
+/**
+ * Changes the language.
+ * @param {string} languageTag - The language tag (e.g., 'en', 'tr').
+ */
+export async function changeLanguage(languageTag:string) {
+  i18n.locale = languageTag;
+}

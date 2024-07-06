@@ -17,6 +17,7 @@ export type DemoTabParamList = {
   DemoPodcastList: undefined
 }
 
+
 /**
  * Helper for automatically generating navigation prop types for each route.
  *
@@ -95,6 +96,7 @@ export function DemoNavigator() {
           ),
         }}
       />
+
     </Tab.Navigator>
   )
 }
