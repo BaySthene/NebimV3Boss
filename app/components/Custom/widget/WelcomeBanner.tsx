@@ -10,15 +10,18 @@ export const WelcomeBanner = () => {
     <View style={$bannerCard}>
       <View style={$welcomeBannerCard}>
         <View style={{justifyContent: 'flex-start'}}>
-          <Text style={{marginBottom:20}} preset="subheading">Hoşgeldin Muhammet Keskin!</Text>
+         <View style={{ flexDirection: 'row' }}>
+           <Text style={{marginBottom:20}} preset="subheading" tx="banners.welcome.welcome"></Text>
+           <Text style={{marginBottom:20}} preset="subheading" text=" Muhammet Keskin"></Text>
+         </View>
           <View style={$welcomeBannerCardStatisticView}>
             <View style={$welcomeBannerCardStatisticDataView}>
               <Text preset="heading">123.000₺<GreenArrow /></Text>
-              <Text preset="formHelper">Bugünkü Satışlar</Text>
+              <Text preset="formHelper" tx="banners.welcome.salesToday" />
             </View>
             <View style={$welcomeBannerCardStatisticDataView}>
               <Text preset="heading">1262<GreenArrow /></Text>
-              <Text preset="formHelper">Bugünkü Satış Adeti</Text>
+              <Text preset="formHelper" tx="banners.welcome.salesCount" />
             </View>
           </View>
 

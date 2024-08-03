@@ -1,8 +1,9 @@
-import { ViewStyle, View, ImageStyle, Image } from "react-native"
+import { ViewStyle, View, ImageStyle, Image, TextStyle } from "react-native"
 import Animated from "react-native-reanimated"
-import { Icon } from "app/components"
+import { Icon, Text } from "app/components"
 import { spacing } from "app/theme"
-import React from "react"
+import React, { useState } from "react"
+import { Dropdown } from "react-native-element-dropdown"
 
 type headerStyleType = {
   marginHorizontal: number,
@@ -13,6 +14,7 @@ interface headerProps {
   headerStyle: headerStyleType,
   toggleDrawerHandle:any
 }
+
 export const Header = ({headerStyle,toggleDrawerHandle}:headerProps) => {
   return (
     <Animated.View style={[$header, headerStyle]}>
@@ -33,13 +35,15 @@ const $header: ViewStyle = {
   height: 60,
   borderBottomRightRadius: 10,
   borderBottomLeftRadius: 10,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowRadius: 3.84,
   paddingHorizontal: 16,
   justifyContent: 'space-between',
   flexDirection: 'row',
   marginBottom: 3,
+  top: 0,
+  left:0,
+  right: 0,
+  position: 'absolute',
+  zIndex: 1,
 }
 
 const $menuUl: ViewStyle = {

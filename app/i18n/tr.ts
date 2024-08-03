@@ -60,12 +60,34 @@ const tr = {
     yearly: "Yıllık",
     salesOverView: {
       title: "Satışlara Genel Bakış",
+      paymentsButton: 'Ödeme Yöntemi Ekle'
+    },
+    transactions: {
+      title: "Alınan Ödemeler",
+    },
+    yearlyGero: {
+      title: "Yıllık Ciro",
+    },
+    bestAndWorstProduct: {
+      title: "En Çok Ve En Az Satan Ürün",
 
+    },
+    financialAgenda: {
+      title: 'Finansal Ajanda',
+      noRecord: 'Tarihinde kayıtlı bir aktivite bulunmamakta'
     }
-
   },
-
-
+  demoCountDown: {
+    title: 'Deneme Süresinin Bitmesine',
+    paymentsButton: 'Ödeme Yöntemi Ekle',
+  },
+  banners: {
+    welcome: {
+      welcome: 'Hoşgeldin',
+      salesToday: 'Bugünkü Satışlar',
+      salesCount: 'Bugünkü Satış Adeti',
+    }
+  },
 
 
 

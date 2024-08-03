@@ -96,7 +96,7 @@ const AppStack = observer(function AppStack() {
           }
         </>
       ) : (
-        //Eğer ki kayıtlı bir giriş bulunamadıysa ilk giriş ekranına yönlenidirelecek
+        // Eğer ki kayıtlı bir giriş bulunamadıysa ilk giriş ekranına yönlenidirelecek
         <>
           <Stack.Screen name="Register" component={Screens.RegisterScreen} />
           <Stack.Screen name="LoginPassword" component={Screens.LoginPasswordScreen} options={{ headerShown: false, presentation: 'transparentModal', animation: 'fade' }} />

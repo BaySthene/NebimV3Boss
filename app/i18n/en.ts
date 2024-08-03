@@ -50,6 +50,41 @@ const en = {
     tapToSignInOrSignUp: "Sign In / Sign Up",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
+  widgets: {
+    daily: "Daily",
+    weekly: "Weekly",
+    monthly: "Monthly",
+    yearly: "Yearly",
+    salesOverView: {
+      title: "Sales Overview",
+    },
+    transactions: {
+      title: "Given Payments",
+    },
+    yearlyGero: {
+      title: "Yearly Gero",
+    },
+    bestAndWorstProduct: {
+      title: "Best And Worst Product",
+    },
+    financialAgenda: {
+      title: 'Financial Agenda',
+      noRecord: 'There is no activity recorded in the date'
+    }
+  },
+  demoCountDown: {
+    title: 'Until The End Of The Trial Period',
+    paymentsButton: 'Add Payment Method'
+  },
+
+  banners: {
+    welcome: {
+      welcome: 'Welcome',
+      salesToday: "Today's Sales",
+      salesCount: "Today's Sales Count",
+    }
+  },
+
   demoNavigator: {
     componentsTab: "Components",
     debugTab: "Debug",

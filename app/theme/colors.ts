@@ -39,6 +39,8 @@ const palette = {
   chart1: "rgba(93, 135, 255, 0.85)",
   chart2: "rgba(93, 135, 255, 0.5)",
   chart3: "rgba(93, 135, 255, 0)",
+  secondary: "#72E128",
+  secondary2: "rgba(114,225,40,0.49)"
 } as const
 
 export const colors = {
@@ -91,4 +93,7 @@ export const colors = {
   chartPrimary: palette.chart1,
   chartPrimaryLowOpacity: palette.chart2,
   chartPrimaryVeryLowOpacity: palette.chart3,
+
+  secondaryColor: palette.secondary,
+  secondaryLowOpacityColor: palette.secondary2,
 }

@@ -24,4 +24,4 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({selectedValue, font, 
   )
 }
 
-//<Text style={{fontSize:28,fontWeight:'bold', paddingHorizontal: spacing.xl}}>{ selectedLabel } {totalValue}₺ <GreenArrow/></Text>
+// <Text style={{fontSize:28,fontWeight:'bold', paddingHorizontal: spacing.xl}}>{ selectedLabel } {totalValue}₺ <GreenArrow/></Text>

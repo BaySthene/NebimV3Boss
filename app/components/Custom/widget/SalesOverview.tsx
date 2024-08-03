@@ -37,7 +37,6 @@ export const SalesOverview: React.FC<SalesOverviewProps> = ({chartData, totalVal
 }
 
 const $lineChartView: ViewStyle = {
-  height: 'auto',
   width: '100%',
 }
 

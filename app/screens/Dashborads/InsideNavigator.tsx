@@ -3,24 +3,26 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Icon, Screen, Text } from "app/components"
 import { Header } from "app/components/Custom/Header"
-import { Dimensions, Image, ImageStyle, ScrollView, View, ViewStyle } from "react-native"
+import { Dimensions, Image, ImageStyle, ScrollView, View, ViewStyle , LogBox } from "react-native"
 import { colors, spacing } from "app/theme"
 import Animated, {
   Easing,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useSharedValue, withSpring, withTiming,
+  useSharedValue, withRepeat, withSequence, withSpring, withTiming,
 } from "react-native-reanimated"
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
 import { Drawer } from "react-native-drawer-layout"
 import { isRTL } from "app/i18n"
-
-import { LogBox } from 'react-native';
 import { WelcomeBanner } from "app/components/Custom/widget/WelcomeBanner"
 import { useStores } from "app/models"
 import { SalesOverviewList } from "app/components/Custom/widget/SalesOverviewList"
-
-
+import { YearlyStatistics } from "app/components/Custom/widget/YearlyStatistics"
+import { DemoCountdown } from "app/components/Custom/widget/DemoCountdown"
+import { CarouselCard } from "app/components/Custom/card/CarouselCard"
+import { GivenPaymentsList } from "app/components/Custom/widget/GivenPaymentsList"
+import { BestAndWorstProduct, BestAndWorstProductDataType } from "app/components/Custom/widget/BestAndWorstProduct"
+import { AgendaDataType, FinancialCalendar } from "app/components/Custom/widget/FinancialCalendar"
 interface InsideNavigatorScreenProps extends AppStackScreenProps<"InsideNavigator"> {}
 export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(function InsideNavigatorScreen(_props) {
 
@@ -28,6 +30,42 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
     [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }],
     [{ label: '1', value: 112 }, { label: '2', value: 322 }, { label: '3', value: 231 }, { label: '4', value: 8329 }, { label: '5', value: 1234 }, { label: '6', value: 100 }, { label: '7', value: 10000 }]
   ];
+  const productData: BestAndWorstProductDataType[] = [
+    {
+      id: '123891askjd12',
+      title: 'Nike DX2319 Kadın Sweatshirt',
+      code: 'DX2319',
+      currencyCode: 'TRY',
+      image: 'https://png.pngtree.com/png-vector/20230902/ourmid/pngtree-white-t-shirt-mockup-realistic-t-shirt-png-image_9906363.png',
+      salesValue: 1230000012,
+    },
+    {
+      id: '123891askjd',
+      title: 'Nike DX2319 Kadın Sweatshirt WORST',
+      code: 'DX2319',
+      currencyCode: 'TRY',
+      salesValue: 123,
+    }
+  ]
+
+  const agendaDatas: AgendaDataType[] = [
+    {
+      id: 'asdasd',
+      date: '2024-07-30',
+      currAccDescription: 'Muhammet Keskin',
+      currAccType: 'retailCustomer',
+      documentCode: 'invoi',
+      value: 1500,
+    },
+    {
+      id: 'sdflw',
+      date: '2024-07-30',
+      currAccDescription: 'Muhammet Keskin',
+      currAccType: 'retailCustomer',
+      documentCode: 'invoi',
+      value: 9200,
+    }
+  ]
 
 
   LogBox.ignoreLogs([
@@ -37,6 +75,8 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
     authenticationStore: { logout },
   } = useStores()
   const scrollY = useSharedValue(0);
+  const scrollXSalesOverview = useSharedValue(0);
+  const scrollXGivenPayments = useSharedValue(0);
   const marginHorizontal = useSharedValue(0);
   const backgroundColor = useSharedValue('transparent');
   const headerElevation = useSharedValue(0);
@@ -69,10 +109,22 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
       setOpen(false)
     }
   }
+  const animatedValue = useSharedValue(0);
   useEffect(() => {
+    animatedValue.value = withRepeat(
+      withSequence(
+        withSpring(1, { damping: 4, stiffness: 30 }),
+        withSpring(0, { damping: 4, stiffness: 15 })
+      ),
+      -1,
+      true
+    );
     return () => timeout.current && clearTimeout(timeout.current)
+
   }, [])
   const $drawerInsets = useSafeAreaInsetsStyle(["top","bottom"])
+
+
   return (
     <Drawer
       open={open}
@@ -111,12 +163,27 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
       >
         <Header headerStyle={headerStyle} toggleDrawerHandle={toggleDrawer} />
         <Animated.ScrollView
-          contentContainerStyle={$scrollView}
+          nestedScrollEnabled={true}
           onScroll={scrollHandler}
           scrollEventThrottle={16}
+          contentContainerStyle={{
+            paddingTop: 60,
+          }}
         >
-          <WelcomeBanner />
-          <SalesOverviewList data={data} />
+          <DemoCountdown animatedValue={animatedValue} />
+          <View style={$scrollView}>
+            <WelcomeBanner />
+            <CarouselCard data={data} scrollX={scrollXSalesOverview}>
+              <SalesOverviewList data={data} scrollX={scrollXSalesOverview} />
+            </CarouselCard>
+            <FinancialCalendar agendaData={agendaDatas} />
+            <YearlyStatistics />
+            <CarouselCard data={data} scrollX={scrollXGivenPayments}>
+              <GivenPaymentsList data={data} scrollX={scrollXGivenPayments} />
+            </CarouselCard>
+            <BestAndWorstProduct data={productData} />
+          </View>
+
 
         </Animated.ScrollView>
 
@@ -129,7 +196,6 @@ const $screenContentContainer: ViewStyle = {
   flex: 1
 }
 const $scrollView: ViewStyle = {
-  flexGrow: 1,
   paddingHorizontal:16,
 
 }

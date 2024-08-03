@@ -73,10 +73,10 @@ export const LineChart:React.FC<LineChartProps> = ({data, chartHeight, chartMarg
 
   return (
       <GestureDetector gesture={pan}>
-        <Canvas style={[{
+        <Canvas style={{
           width: chartWidth,
           height: chartHeight + 35,
-        }]}>
+        }}>
           <Path path={linePath!} style={'stroke'} strokeWidth={4} strokeCap={'round'} color={colors.chartPrimary} start={0} end={animationLine}/>
           <Gradient chartHeight={chartHeight} chartMargin={chartMargin} chartWidth={chartWidth} curvedLine={curvedLine} animationGradient={animationGradient} />
           {

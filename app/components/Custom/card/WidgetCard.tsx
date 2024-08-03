@@ -1,13 +1,13 @@
 import { View, ViewProps, ViewStyle } from "react-native"
 import React from "react"
-import { colors } from "app/theme"
-import { Text } from "app/components"
+import { colors, spacing } from "app/theme"
+import { Text, TextProps } from "app/components"
 import { MasterCard } from "assets/svg/MasterCard"
 import { TxKeyPath } from "app/i18n"
-interface WidgetCardProps extends ViewProps{
+export interface WidgetCardProps extends ViewProps{
   children: React.ReactNode,
   title: TxKeyPath,
-  subTitle: TxKeyPath,
+  subTitle?: TextProps["tx"],
   headerShown: boolean,
 }
 export const WidgetCard: React.FC<WidgetCardProps> = ({children,title,subTitle,headerShown = true, ...viewProps}) => {
@@ -20,7 +20,7 @@ export const WidgetCard: React.FC<WidgetCardProps> = ({children,title,subTitle,h
             <View style={$widgetCardHeader}>
               <View style={$widgetCardHeaderLeft}>
                 <Text preset="subheading" tx={title}></Text>
-                <Text preset="formHelper" tx={subTitle}></Text>
+                { typeof subTitle !== null && (<Text preset="formHelper" tx={subTitle}></Text>)}
               </View>
               <View style={{backgroundColor: 'rgb(236, 242, 255)', borderRadius: 7, height: 40, width: 40, alignItems: 'center', justifyContent: 'center'}}>
                 <MasterCard/>
@@ -47,7 +47,7 @@ const $widgetCard: ViewStyle = {
   shadowOffset: { width: 0, height: 5 },
   shadowRadius: 3.84,
   shadowOpacity: 0.8,
-  elevation: 2
+  elevation: 2,
 }
 
 const $widgetCardHeader: ViewStyle = {
