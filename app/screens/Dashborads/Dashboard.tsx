@@ -9,6 +9,7 @@ interface DashboardScreenProps extends AppStackScreenProps<"Dashboard"> {}
 export type DashboardParamList = {
   handleEvent: ScrollHandlerProcessed<Record<string, unknown>>;
 }
+
 export const DashboardScreen: FC<DashboardScreenProps> = observer(function DashboardScreen(_props) {
 // export const DashboardScreen: FC<any> = ({ handleEvent }) => {
   const { route } = _props

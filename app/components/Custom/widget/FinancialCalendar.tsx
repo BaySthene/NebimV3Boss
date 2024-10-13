@@ -134,12 +134,7 @@ export const FinancialCalendar: React.FC<FinancialCalendarProps> = ({ agendaData
               alignItems: 'center',
               paddingVertical: spacing.md
             }}>
-              <LottieView
-                source={{uri: 'https://lottie.host/8674d68c-eac4-49b9-acb0-7c9e68f87e38/5BGZlpNThk.json'}}
-                style={$lottieStyle}
-                autoPlay
-                loop
-              />
+
               <Text preset="subheading">{selected}</Text>
               <Text preset="formLabel" style={{color: colors.textDim}} tx="widgets.financialAgenda.noRecord" />
             </View>

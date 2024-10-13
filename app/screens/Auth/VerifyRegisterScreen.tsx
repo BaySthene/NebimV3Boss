@@ -35,12 +35,7 @@ export const VerifyRegisterScreen: FC<VerifyRegisterScreenProps> = observer(func
             </Pressable>
           </View>
           <BlurView intensity={80}  style={$blurViewContainer}>
-              <LottieView
-                source={require('../../../assets/animations/signin.json')}
-                style={$lottieStyle}
-                autoPlay
-                loop
-              />
+
               <Text testID="login-heading" preset="heading" text="Yetkilendirme" />
               <Text testID="login-heading" preset="bold" text="Size ve şirket yöneticinize bir e-posta gönderdik. Bir sonra ki adıma geçebilmek için; kimliğinizi doğrulayıp yetkilendirilmelisiniz." style={$verifyLabel} />
               <View style={$verifyBrandLabel}>

@@ -60,7 +60,8 @@ const AppStack = observer(function AppStack() {
             ) : (
               <>
                 <Stack.Screen name="Login" component={Screens.LoginScreen} />
-                <Stack.Screen name="LoginPassword" component={Screens.LoginPasswordScreen} options={{ headerShown: false, presentation: 'transparentModal', animation: 'fade' }} />
+                <Stack.Screen name="LoginPassword" component={Screens.LoginPasswordScreen}
+                options={{ headerShown: false, presentation: "transparentModal", animation: "fade" }} />
               </>
             )
           }

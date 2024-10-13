@@ -11,8 +11,9 @@ export const AuthenticationStoreModel = types
     authUserId: types.maybe(types.string),
     register: types.optional(RegisterModel,{firstName: "", lastName: ""}),
     accessToken: types.maybe(types.string),
-    expiresIn: types.maybe(types.number),
+    expiresIn: types.maybe(types.string),
     refreshToken: types.maybe(types.string),
+    grantType: types.optional(types.string, 'client_credentials')
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -38,6 +39,9 @@ export const AuthenticationStoreModel = types
     setAuthToken(value?: string) {
       store.authToken = value
     },
+    setGrantType(value: string) {
+      store.grantType = value
+    },
     setIsAuthenticated(value: boolean ) {
       store.isAuthenticatedP = value
     },
@@ -50,7 +54,7 @@ export const AuthenticationStoreModel = types
     setAccessToken(value: string) {
       store.accessToken = value
     },
-    setExpireIn(value: number) {
+    setExpireIn(value: string, s: string) {
       store.expiresIn = value
     },
     setRefreshToken(value: string) {

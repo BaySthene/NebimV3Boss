@@ -7,14 +7,14 @@ import { colors, spacing } from "app/theme"
 import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated"
 import { changeLanguage } from "app/i18n"
 import { useStores } from "app/models"
-import authController from "app/services/api/auth/authController"
+import { authController } from "app/services/api/auth/authController"
 
 interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 
 export const RegisterScreen: FC<RegisterScreenProps> = observer(function RegisterScreen(_props) {
   const { navigation } = _props
   const {
-    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setIsAuthenticated, validationError, isRecorded },
+    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setGrantType, validationError, isRecorded },
   } = useStores()
   const authVKNInput = useRef<TextInput>(null)
   const authEmailInput = useRef<TextInput>(null)
@@ -33,12 +33,16 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
   }
   const registerHandle = async () => {
 
-   // await authController.IsHaveAccount(authVKN)
-
-    setAuthToken(String(Date.now()))
-    setAuthEmail(authEmailS);
-    setAuthTaxId(authVKN);
-    setIsAuthenticated(true);
+    await authController.IsHaveAccount(authVKN, authEmailS).then((res: any) => {
+      if(res.exists) {
+        setAuthToken(res.accessToken)
+        setAuthEmail(authEmailS)
+        setAuthTaxId(authVKN)
+        setGrantType('password')
+      }else {
+        navigation.navigate("RegisterParams")
+      }
+    })
   }
   return (
     <Screen
@@ -70,6 +74,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
               autoFocus
               helper=""
               HelperTextProps={{style: { color: colors.error }}}
+              keyboardType="number-pad"
             />
             <TextField
               style={$textField}
@@ -84,6 +89,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
               placeholderTx="loginScreen.emailFieldPlaceholder"
               onSubmitEditing={() => registerHandle}
               inputWrapperStyle={{ alignItems: 'center'}}
+              keyboardType="email-address"
             />
             <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignInOrSignUp" onPress={registerHandle} />
 

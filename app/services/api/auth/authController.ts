@@ -33,7 +33,6 @@ export class AuthController {
    * Set up our API instance. Keep this lightweight!
    */
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
-    console.log(config.url);
     this.config = config
     this.apisauce = create({
       baseURL: this.config.url,
@@ -46,24 +45,29 @@ export class AuthController {
   }
 
 
-  async getAccessToken(): Promise<any> {
-    const response = await this.apisauce.post("/connect/token", {
-      grant_type: "client_credentials",
-      client_id: "app.client",
-    })
-    /*const {
-      authenticationStore: { accessToken, expiresIn },
+  async getAccessToken(username?:string, password?:string): Promise<any> {
+    const {
+      authenticationStore: { accessToken, expiresIn, refreshToken, grantType },
     } = useStores()
 
+    console.log({ accessToken, expiresIn, refreshToken, grantType })
+    if(!refreshToken && grantType === 'client_credentials'){
+      const response: any = await this.apisauce.post("/connect/token", {
+        grant_type: "client_credentials",
+        client_id: "app.client",
+      })
+      return response.data.access_token
+    }
+    if(refreshToken) {
+      const expiryDate = expiresIn ? new Date(expiresIn) : null
 
-    const expiryDate = expiresIn ? new Date(expiresIn) : null
-
-    if (accessToken && expiryDate && expiryDate > new Date()) {
-      return accessToken
+      if (accessToken && expiryDate && expiryDate > new Date()) {
+        return accessToken
+      }else{
+        return await this.refreshToken()
+      }
     }
 
-    return await this.refreshToken() */// Try to get a new access token with refresh token
-    return response
   }
 
 
@@ -80,40 +84,45 @@ export class AuthController {
       client_id: "app.client",
     })
 
-    /*if (!response.ok) {
+    /* if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return null
-    }*/
+    } */
 
     // If successful, store the new access token and refresh token
+    // eslint-disable-next-line camelcase
     const { access_token, refresh_token, expires_in } = response.data
     setAccessToken(access_token)
     setRefreshToken(refresh_token)
-    //localStorage.setItem('expires_in', new Date(Date.now() + expires_in * 1000).toString())
-    setExpireIn(expires_in)
+    // eslint-disable-next-line camelcase
+    setExpireIn('expires_in', new Date(Date.now() + expires_in * 1000).toString())
+    // eslint-disable-next-line camelcase
     return access_token
   }
 
   /**
    * Gets a list of recent React Native Radio episodes.
    */
-  async IsHaveAccount(TaxId:string): Promise<boolean | GeneralApiProblem> {
+  async IsHaveAccount(TaxId:string, Email:string): Promise<any> {
 
     // make the api call
     const token = await this.getAccessToken()
     if (!token) return { kind: "unauthorized" }
+    const payload = {
+      taxId: TaxId,
+      email: Email
+    };
 
-    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
-      `api/user/ishaveaccount`,
-      {
-        "TaxId": TaxId
-      },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
+    const response: ApiResponse<any> = await this.apisauce.post(
+      `/api/user/checkuser`,
+      payload,
+      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+    );
 
-    return response
+    return { exists: response.data.exists, accessToken: token, grantType: 'client_credentials'}
 
   }
+
 }
 
 // Singleton instance of the API for convenience

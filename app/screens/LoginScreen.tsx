@@ -12,19 +12,20 @@ import {
 } from "react-native"
 import { $presets, Button, Icon, Screen, Text } from "../components"
 import { AppStackScreenProps } from "../navigators"
-import { colors, spacing } from "../theme"
-import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated"
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"
+import { spacing } from "../theme"
+import Animated from "react-native-reanimated"
 import { changeLanguage } from "app/i18n"
 import { authController } from "app/services/api/auth/authController"
-import { useCheckAccount } from "app/Hooks/useCheckAccount"
-import { ApiResponse, create } from "apisauce"
+import { useStores } from "app/models"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
   const { navigation } = _props
   const  [ language, setLanguage ] = useState('tr');
+  const {
+    authenticationStore: { refreshToken, accessToken, expiresIn },
+  } = useStores()
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
       await changeLanguage('en')
@@ -34,6 +35,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       setLanguage('tr')
     }
   }
+  useEffect(() => {
+    console.log(`refrsh: ${refreshToken} accs: ${accessToken}, expdate: ${expiresIn}`)
+  }, [])
 
 
   const handlePress = async () => {
