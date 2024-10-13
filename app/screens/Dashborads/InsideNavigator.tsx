@@ -138,7 +138,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
       renderDrawerContent={() => (
         <View style={[$drawer, {paddingTop: $drawerInsets.paddingTop,paddingBottom: $drawerInsets.paddingBottom}]}>
           <View style={$drawerHeaderView}>
-            <Text preset="subheading" text="Nebim V3 Patron" />
+            <Text preset="subheading" tx="base.name" />
           </View>
           <ScrollView contentContainerStyle={$scrollView}>
 
@@ -158,7 +158,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
     >
       <Screen
         preset="scroll"
-        safeAreaEdges={["top","bottom"]}
+        safeAreaEdges={["top"]}
         contentContainerStyle={$screenContentContainer}
       >
         <Header headerStyle={headerStyle} toggleDrawerHandle={toggleDrawer} />
@@ -172,15 +172,17 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
         >
           <DemoCountdown animatedValue={animatedValue} />
           <View style={$scrollView}>
-            <WelcomeBanner />
             <CarouselCard data={data} scrollX={scrollXSalesOverview}>
               <SalesOverviewList data={data} scrollX={scrollXSalesOverview} />
             </CarouselCard>
-            <FinancialCalendar agendaData={agendaDatas} />
             <YearlyStatistics />
             <CarouselCard data={data} scrollX={scrollXGivenPayments}>
               <GivenPaymentsList data={data} scrollX={scrollXGivenPayments} />
             </CarouselCard>
+            <CarouselCard data={data} scrollX={scrollXGivenPayments}>
+              <GivenPaymentsList data={data} scrollX={scrollXGivenPayments} />
+            </CarouselCard>
+            <FinancialCalendar agendaData={agendaDatas} />
             <BestAndWorstProduct data={productData} />
           </View>
 

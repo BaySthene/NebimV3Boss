@@ -4,14 +4,19 @@
   },
   "build": {
     "development": {
+      "developmentClient": true,
       "extends": "production",
       "distribution": "internal",
+      "preview": {
+        "distribution": "internal"
+      },
       "android": {
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
         "buildConfiguration": "Debug",
-        "simulator": true
+        "simulator": true,
+        "enterpriseProvisioning": "universal"
       }
     },
     "development:device": {

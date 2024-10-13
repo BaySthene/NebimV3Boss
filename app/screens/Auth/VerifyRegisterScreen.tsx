@@ -44,7 +44,7 @@ export const VerifyRegisterScreen: FC<VerifyRegisterScreenProps> = observer(func
               <Text testID="login-heading" preset="heading" text="Yetkilendirme" />
               <Text testID="login-heading" preset="bold" text="Size ve şirket yöneticinize bir e-posta gönderdik. Bir sonra ki adıma geçebilmek için; kimliğinizi doğrulayıp yetkilendirilmelisiniz." style={$verifyLabel} />
               <View style={$verifyBrandLabel}>
-                <Text testID="login-heading" preset="bold" text="Nebim V3 Portal"   />
+                <Text testID="login-heading" preset="bold" tx="base.name"  />
               </View>
           </BlurView>
         </ImageBackground>

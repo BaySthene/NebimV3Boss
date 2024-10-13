@@ -43,11 +43,6 @@ const $widgetCard: ViewStyle = {
   backgroundColor: colors.cardBackground,
   marginVertical: 16,
   borderRadius:10,
-  shadowColor: 'rgb(38, 43, 67)',
-  shadowOffset: { width: 0, height: 5 },
-  shadowRadius: 3.84,
-  shadowOpacity: 0.8,
-  elevation: 2,
 }
 
 const $widgetCardHeader: ViewStyle = {

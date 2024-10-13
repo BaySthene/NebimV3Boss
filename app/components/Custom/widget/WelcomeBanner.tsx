@@ -26,7 +26,7 @@ export const WelcomeBanner = () => {
           </View>
 
         </View>
-        <WelcomeBg width="100%" height={200} style={{marginTop:-60}}  />
+        {/*<WelcomeBg width="100%" height={200} style={{ marginTop: -60 }} />*/}
       </View>
     </View>
   )
@@ -45,6 +45,7 @@ const $bannerCard: ViewStyle = {
   elevation: 2,
   paddingHorizontal: 16,
   paddingTop: 32,
+  paddingBottom: 32,
 }
 const $welcomeBannerCard: ViewStyle = {
   flexDirection: 'column',

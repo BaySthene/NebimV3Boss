@@ -2,7 +2,7 @@ import { AppStackScreenProps } from "app/navigators"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { $presets, Icon, TextField, TextFieldAccessoryProps } from "app/components"
-import { Pressable, TextInput, TextStyle, ViewStyle } from "react-native"
+import { Pressable, ScrollView, TextInput, TextStyle, ViewStyle } from "react-native"
 import { colors, spacing } from "app/theme"
 import { BlurView } from "expo-blur"
 import { useStores } from "app/models"
@@ -75,10 +75,10 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
         navigation.goBack();
       }}>
         <BlurView style={[$screenContentContainer, { paddingTop: $drawerInsets.paddingTop, paddingBottom: $drawerInsets.paddingBottom }]} intensity={120} tint="light">
-
-            <Animated.View entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} >
-              <Animated.Image entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} sharedTransitionTag="sharedTag" style={{width:120,height: 120, marginVertical: spacing.md}} borderRadius={60} source={{uri: 'https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp'}} resizeMode="cover" />
-              <Animated.Text sharedTransitionTag="fullName" testID="login-heading" style={$presets.heading} >Muhammet Keskin</Animated.Text>
+          <ScrollView>
+            <Animated.View>
+              <Animated.Image style={{width:120,height: 120, marginVertical: spacing.md}} borderRadius={60} source={{uri: 'https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp'}} resizeMode="cover" />
+              <Animated.Text  testID="login-heading" style={$presets.heading} >Muhammet Keskin</Animated.Text>
               <TextField
                 style={$textField}
                 ref={authPasswordInput}
@@ -97,6 +97,8 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
                 autoFocus
               />
             </Animated.View>
+          </ScrollView>
+
 
         </BlurView>
       </Pressable>

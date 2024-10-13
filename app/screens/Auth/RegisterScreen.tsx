@@ -2,24 +2,25 @@ import { AppStackScreenProps } from "app/navigators"
 import React, { FC, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Text, Screen, TextField, Button } from "app/components"
-import { ImageBackground, Pressable, TextInput, TextStyle, View, ViewStyle } from "react-native"
-import { spacing } from "app/theme"
+import { Pressable, ScrollView, TextInput, TextStyle, View, ViewStyle } from "react-native"
+import { colors, spacing } from "app/theme"
 import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated"
 import { changeLanguage } from "app/i18n"
 import { useStores } from "app/models"
+import authController from "app/services/api/auth/authController"
 
 interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 
 export const RegisterScreen: FC<RegisterScreenProps> = observer(function RegisterScreen(_props) {
   const { navigation } = _props
+  const {
+    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setIsAuthenticated, validationError, isRecorded },
+  } = useStores()
   const authVKNInput = useRef<TextInput>(null)
   const authEmailInput = useRef<TextInput>(null)
-  const [ authEmailS, setAuthEmailS ] = useState('');
-  const [ authVKN, setAuthVKN ] = useState('');
+  const [ authEmailS, setAuthEmailS ] = useState(isRecorded ? authEmail : '');
+  const [ authVKN, setAuthVKN ] = useState(isRecorded ? authTaxId : '');
   const  [ language, setLanguage ] = useState('tr');
-  const {
-    authenticationStore: { setAuthEmail, setAuthToken, setIsAuthenticated, validationError },
-  } = useStores()
   // callbacks
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
@@ -30,58 +31,65 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
       setLanguage('tr')
     }
   }
-  const registerHandle = () => {
+  const registerHandle = async () => {
+
+   // await authController.IsHaveAccount(authVKN)
+
     setAuthToken(String(Date.now()))
+    setAuthEmail(authEmailS);
+    setAuthTaxId(authVKN);
     setIsAuthenticated(true);
   }
   return (
     <Screen
-      preset="auto"
+      preset="scroll"
       contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
+      safeAreaEdges={["top"]}
     >
 
-      <ImageBackground style={$imageBackgroundContainer} width={1000} source={{uri: 'https://nebim.istanbul/assets/media/auth/bg10.jpeg'}} resizeMode="cover">
-        <View style={{ alignItems: 'flex-end', paddingVertical: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.xxxl, paddingRight: -spacing.xl}}>
-          <Pressable onPress={() => changeLanguageHandle()}>
-            <Text tx='loginScreen.language' />
-          </Pressable>
-        </View>
-        <Animated.View entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} >
-          <Text testID="login-heading" preset="heading" text="Nebim V3 Portal" style={$brandHeadingText} />
-          <TextField
-            style={$textField}
-            ref={authVKNInput}
-            value={authVKN}
-            onChangeText={setAuthVKN}
-            containerStyle={$textFieldContainer}
-            autoCapitalize="none"
-            autoCorrect
-            labelTx="loginScreen.vknFieldLabel"
-            placeholderTx="loginScreen.vknFieldPlaceholder"
-            onSubmitEditing={() => authEmailInput.current && authEmailInput.current.focus()}
-            inputWrapperStyle={{ alignItems: 'center'}}
-            autoFocus
-          />
-          <TextField
-            style={$textField}
-            ref={authEmailInput}
-            value={authEmailS}
-            onChangeText={setAuthEmailS}
-            containerStyle={$textFieldContainer}
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect
-            labelTx="loginScreen.emailFieldLabel"
-            placeholderTx="loginScreen.emailFieldPlaceholder"
-            onSubmitEditing={() => console.log('gönderdin')}
-            inputWrapperStyle={{ alignItems: 'center'}}
-          />
-          <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignInOrSignUp" onPress={registerHandle} />
+      <ScrollView style={$imageBackgroundContainer}>
+          <View style={{ alignItems: 'flex-end', paddingVertical: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.xxxl, paddingRight: -spacing.xl}}>
+            <Pressable onPress={() => changeLanguageHandle()}>
+              <Text tx='loginScreen.language' />
+            </Pressable>
+          </View>
+          <Animated.View entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} >
+            <Text testID="login-heading" preset="heading" tx="base.name" style={$brandHeadingText} />
+            <TextField
+              style={$textField}
+              ref={authVKNInput}
+              value={authVKN}
+              onChangeText={setAuthVKN}
+              containerStyle={$textFieldContainer}
+              autoCapitalize="none"
+              autoCorrect
+              labelTx="loginScreen.vknFieldLabel"
+              placeholderTx="loginScreen.vknFieldPlaceholder"
+              onSubmitEditing={() => authEmailInput.current && authEmailInput.current.focus()}
+              inputWrapperStyle={{ alignItems: 'center'}}
+              autoFocus
+              helper=""
+              HelperTextProps={{style: { color: colors.error }}}
+            />
+            <TextField
+              style={$textField}
+              ref={authEmailInput}
+              value={authEmailS}
+              onChangeText={setAuthEmailS}
+              containerStyle={$textFieldContainer}
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect
+              labelTx="loginScreen.emailFieldLabel"
+              placeholderTx="loginScreen.emailFieldPlaceholder"
+              onSubmitEditing={() => registerHandle}
+              inputWrapperStyle={{ alignItems: 'center'}}
+            />
+            <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignInOrSignUp" onPress={registerHandle} />
 
-        </Animated.View>
+          </Animated.View>
 
-      </ImageBackground>
+      </ScrollView>
     </Screen>
   )
 });

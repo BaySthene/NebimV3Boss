@@ -1,12 +1,24 @@
 import { observer } from "mobx-react-lite"
-import React, { FC, useCallback, useRef, useState } from "react"
-import { ImageBackground, Pressable, StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import React, { FC, useCallback, useEffect, useRef, useState } from "react"
+import {
+  ActivityIndicator,
+  ImageBackground,
+  Pressable,
+  ScrollView,
+  StyleProp,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native"
 import { $presets, Button, Icon, Screen, Text } from "../components"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated"
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"
 import { changeLanguage } from "app/i18n"
+import { authController } from "app/services/api/auth/authController"
+import { useCheckAccount } from "app/Hooks/useCheckAccount"
+import { ApiResponse, create } from "apisauce"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -23,44 +35,53 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   }
 
-  const handlePress = () => {
-    navigation.navigate("LoginPassword")
+
+  const handlePress = async () => {
+   // navigation.navigate("LoginPassword")
+    await authController.getAccessToken().then((res) => {
+      console.log(res);
+    })
   };
 
   return (
     <Screen
-      preset="auto"
+      preset="scroll"
       contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
+      safeAreaEdges={["top"]}
     >
-      <View style={{ alignItems: 'flex-end', paddingVertical: spacing.md, paddingHorizontal: spacing.lg}}>
-        <Pressable onPress={() => changeLanguageHandle()}>
-          <Text tx='loginScreen.language' />
-        </Pressable>
-      </View>
-      <ImageBackground style={$imageBackgroundContainer} width={1000} source={{uri: 'https://nebim.istanbul/assets/media/auth/bg10.jpeg'}} resizeMode="cover">
-        <Animated.View entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} >
-          <Text testID="login-heading" preset="heading" text="Nebim V3 Portal" style={$brandHeadingText} />
+      <ScrollView style={$imageBackgroundContainer}>
 
-          <Animated.Image entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} sharedTransitionTag="sharedTag" style={{width:120,height: 120, marginVertical: spacing.md}} borderRadius={60} source={{uri: 'https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp'}} resizeMode="cover" />
+        <View style={{ alignItems: 'flex-end', paddingVertical: spacing.md, paddingHorizontal: spacing.lg}}>
+          <Pressable onPress={() => changeLanguageHandle()}>
+            <Text tx='loginScreen.language' />
+          </Pressable>
+        </View>
+        <Animated.View>
+          <Text testID="login-heading" preset="heading" tx="base.name" style={$brandHeadingText} />
 
-          <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText"  style={$welcomeText}/>
-          <Animated.Text sharedTransitionTag="fullName" testID="login-heading" style={$presets.heading} >Muhammet Keskin</Animated.Text>
-          <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" onPress={handlePress} />
-          <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount"  />
+
+          <Animated.Image style={{ width: 120, height: 120, marginVertical: spacing.md }} borderRadius={60}
+                          source={{ uri: "https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp" }}
+                          resizeMode="cover" />
+
+          <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText" style={$welcomeText} />
+          <Animated.Text testID="login-heading" style={$presets.heading}>Muhammet Keskin</Animated.Text>
+          <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"
+                  onPress={handlePress} />
+          <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" />
         </Animated.View>
-      </ImageBackground>
+      </ScrollView>
+
     </Screen>
   )
 })
 
 
 const $screenContentContainer: ViewStyle = {
-  flex: 1
+  flex: 1,
 }
 const $imageBackgroundContainer: ViewStyle = {
   paddingHorizontal: spacing.xl,
-  paddingTop: spacing.xxxl,
   flex: 1,
 }
 const $brandHeadingText: TextStyle = {
