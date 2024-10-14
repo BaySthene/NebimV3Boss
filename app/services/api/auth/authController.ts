@@ -67,16 +67,16 @@ export class AuthController {
     setExpireIn('expires_in', new Date(Date.now() + expires_in * 1000).toString())
     // eslint-disable-next-line camelcase
     return access_token
-  }*/
+  } */
 
   /**
    * Gets a list of recent React Native Radio episodes.
    */
   async IsHaveAccount(TaxId:string, Email:string): Promise<any> {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     // make the api call
-    if (TaxId?.length !== 10 && TaxId?.length !== 11) {
-      return { exists: false, error: 'VKN / TCKN 10 veya 11 karakterden oluşmalı' };
-    }
+    if (TaxId?.length !== 10 && TaxId?.length !== 11) return { exists: false, error: 'VKN / TCKN 10 veya 11 karakterden oluşmalı' };
+    if(!emailRegex.test(Email)) return { exists: false, error: 'E-posta adresini doğru girmelisiniz.' };
     const token = await this.getAccessToken()
     if (!token) return { kind: "unauthorized" }
     const payload = {
@@ -118,6 +118,44 @@ export class AuthController {
     return response.data
 
 
+  }
+
+  async PostRegister(authToken: unknown, authFirstName: unknown, authLastName: unknown, authPassword: string, authEmail: string, authTaxId: unknown) : Promise<any> {
+    let token;
+    if(!authToken){
+      token = await this.getAccessToken()
+      if (!token) return { kind: "unauthorized" }
+    }else {
+      token = authToken
+    }
+    const payload = {
+      UserName: authEmail,
+      Email: authEmail,
+      TaxId: authTaxId,
+      FirstName: authFirstName,
+      LastName: authLastName,
+      Password: authPassword
+    };
+    const response: ApiResponse<any> = await this.apisauce.post(
+      `/api/user/signup`,
+      payload,
+      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+    );
+    if(response.data.isRegister) {
+      return await this.PostLogin(authPassword, authEmail);
+    }else {
+      return response.data;
+    }
+  }
+
+  async PostLogin(authPassword: string, authEmail: string) : Promise<any> {
+    const response: any = await this.apisauce.post("/connect/token", {
+      grant_type: "password",
+      client_id: "app.client",
+      username: authEmail,
+      password: authPassword
+    })
+    return response.data;
   }
 }
 

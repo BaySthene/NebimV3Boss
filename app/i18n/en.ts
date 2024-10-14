@@ -51,6 +51,7 @@ const en = {
     passwordFieldPlaceholder: "Super secret password here",
     tapToSignIn: "Sign In",
     tapToSignInOrSignUp: "Sign In / Sign Up",
+    loading: "Loading...",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
   widgets: {

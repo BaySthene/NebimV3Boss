@@ -23,6 +23,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
   const [ authEmailError, setAuthEmailError ] = useState('');
   const [ authVKN, setAuthVKN ] = useState(isRecorded ? authTaxId : '');
   const  [ language, setLanguage ] = useState('tr');
+  const [ registerButtonToggle, setRegisterButtonToggle ] = useState(true)
   // callbacks
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
@@ -34,19 +35,21 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
     }
   }
   const registerHandle = async () => {
-
+    setAuthVKNError('');
+    setRegisterButtonToggle(false);
     await authController.IsHaveAccount(authVKN, authEmailS).then((res: any) => {
+      setRegisterButtonToggle(true);
+      setAuthEmail(authEmailS)
+      setAuthTaxId(authVKN)
       if(res.exists) {
         setUserId(res.userId)
         setGrantType('password')
         setAuthToken(res.accessToken)
-        setAuthEmail(authEmailS)
-        setAuthTaxId(authVKN)
       }else {
         if(res.error){
           setAuthVKNError(res.error);
         }
-       // navigation.navigate("RegisterParams")
+        navigation.navigate("RegisterParams")
       }
     })
   }
@@ -99,7 +102,14 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
               helper={authEmailError}
               HelperTextProps={{style: { color: colors.error, fontSize: 13 }}}
             />
-            <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignInOrSignUp" onPress={registerHandle} />
+            {
+              registerButtonToggle ? (
+                <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignInOrSignUp" onPress={registerHandle} />
+              ) : (
+                <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.loading" disabled={true} onPress={registerHandle} />
+              )
+            }
+
 
           </Animated.View>
 

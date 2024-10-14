@@ -53,6 +53,7 @@ const tr = {
     passwordFieldPlaceholder: "Lütfen şifrenizi girin",
     tapToSignIn: "Giriş Yap",
     tapToSignInOrSignUp: "Giriş Yap / Kayıt Ol",
+    loading: "Yükleniyor...",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
 

@@ -7,11 +7,13 @@ import { colors, spacing } from "app/theme"
 import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated"
 import { changeLanguage } from "app/i18n"
 import { useStores } from "app/models"
+import { authController } from "app/services/api/auth/authController"
 interface RegisterParamsProps extends AppStackScreenProps<"RegisterParams"> {}
 
 export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function RegisterParamsScreen(_props) {
+  const { navigation } = _props
   const {
-    authenticationStore: { validationError, isRecorded, register },
+    authenticationStore: { validationError, isRecorded, register, authEmail, authTaxId, authToken, setIsAuthenticated ,setRefreshToken, setExpireIn, setAuthToken },
   } = useStores()
   const authFirstNameInput = useRef<TextInput>(null)
   const authLastNameInput = useRef<TextInput>(null)
@@ -45,6 +47,16 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
       },
     [isAuthPasswordHidden],
   )
+
+  const registerHandle = async () => {
+    authController.PostRegister(authToken, authFirstName, authLastName, authPassword, authEmail, authTaxId).then((res) => {
+      console.log(res)
+      setRefreshToken(res.refresh_token)
+      setAuthToken(res.access_token)
+      setExpireIn('expires_in', new Date(Date.now() + res.expires_in * 1000).toString())
+      setIsAuthenticated(true)
+    })
+  }
   return (
     <Screen
       preset="scroll"
@@ -52,11 +64,19 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
       safeAreaEdges={["top"]}
     >
      <ScrollView style={$imageBackgroundContainer}>
-         <View style={{ alignItems: 'flex-end', paddingVertical: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.xxxl, paddingRight: -spacing.xl}}>
-           <Pressable onPress={() => changeLanguageHandle()}>
-             <Text tx='loginScreen.language' />
-           </Pressable>
-         </View>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+            <Icon size={spacing.lg} style={{ paddingHorizontal: spacing.lg, paddingBottom: spacing.xxxl, paddingRight: -spacing.xl}} icon="back" onPress={() => navigation.goBack()} />
+            <View style={{ alignItems: 'flex-end', paddingVertical: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.xxxl, paddingRight: -spacing.xl}}>
+
+              <Pressable onPress={() => changeLanguageHandle()}>
+                <Text tx='loginScreen.language' />
+              </Pressable>
+            </View>
+          </View>
+
          <Animated.View entering={FadeInLeft.duration(400).delay(500)} exiting={FadeOutLeft.duration(400).delay(500)} >
            <Text testID="login-heading" preset="heading" tx="base.name" style={$brandHeadingText} />
            <TextField
@@ -72,6 +92,7 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
              onSubmitEditing={() => authFirstNameInput.current && authLastNameInput.current.focus()}
              inputWrapperStyle={{ alignItems: 'center'}}
              autoFocus
+             keyboardType="default"
            />
            <TextField
              style={$textField}
@@ -86,6 +107,7 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
              onSubmitEditing={() => authLastNameInput.current && authPasswordInput.current.focus()}
              inputWrapperStyle={{ alignItems: 'center'}}
              autoFocus
+             keyboardType="default"
            />
            <TextField
              style={$textField}
@@ -102,8 +124,9 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
              RightAccessory={PasswordRightAccessory}
              inputWrapperStyle={{ alignItems: 'center'}}
              autoFocus
+             keyboardType="visible-password"
            />
-           <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"  />
+           <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" onPress={registerHandle}  />
 
          </Animated.View>
 
