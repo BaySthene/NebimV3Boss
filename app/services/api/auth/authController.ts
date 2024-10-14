@@ -7,11 +7,7 @@
  */
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import Config from "../../../config"
-import { GeneralApiProblem, getGeneralApiProblem } from "../apiProblem"
-import type { ApiConfig, ApiFeedResponse } from "../api.types"
-import type { EpisodeSnapshotIn } from "app/models/Episode"
-import { UserCheck } from "app/services/api/auth/authController.types"
-import { useStores } from "app/models"
+import type { ApiConfig } from "../api.types"
 
 /**
  * Configuring the apisauce instance.
@@ -45,36 +41,16 @@ export class AuthController {
   }
 
 
-  async getAccessToken(username?:string, password?:string): Promise<any> {
-    const {
-      authenticationStore: { accessToken, expiresIn, refreshToken, grantType },
-    } = useStores()
-
-    console.log({ accessToken, expiresIn, refreshToken, grantType })
-    if(!refreshToken && grantType === 'client_credentials'){
+  async getAccessToken(): Promise<any> {
       const response: any = await this.apisauce.post("/connect/token", {
         grant_type: "client_credentials",
         client_id: "app.client",
       })
       return response.data.access_token
-    }
-    if(refreshToken) {
-      const expiryDate = expiresIn ? new Date(expiresIn) : null
-
-      if (accessToken && expiryDate && expiryDate > new Date()) {
-        return accessToken
-      }else{
-        return await this.refreshToken()
-      }
-    }
-
   }
 
 
-  async refreshToken(): Promise<string | null> {
-    const {
-      authenticationStore: { refreshToken, setRefreshToken, setAccessToken, setExpireIn },
-    } = useStores()
+ /* async refreshToken(): Promise<string | null> {
 
     if (!refreshToken) return null
 
@@ -83,13 +59,6 @@ export class AuthController {
       refresh_token: refreshToken,
       client_id: "app.client",
     })
-
-    /* if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return null
-    } */
-
-    // If successful, store the new access token and refresh token
     // eslint-disable-next-line camelcase
     const { access_token, refresh_token, expires_in } = response.data
     setAccessToken(access_token)
@@ -98,14 +67,16 @@ export class AuthController {
     setExpireIn('expires_in', new Date(Date.now() + expires_in * 1000).toString())
     // eslint-disable-next-line camelcase
     return access_token
-  }
+  }*/
 
   /**
    * Gets a list of recent React Native Radio episodes.
    */
   async IsHaveAccount(TaxId:string, Email:string): Promise<any> {
-
     // make the api call
+    if (TaxId?.length !== 10 && TaxId?.length !== 11) {
+      return { exists: false, error: 'VKN / TCKN 10 veya 11 karakterden oluşmalı' };
+    }
     const token = await this.getAccessToken()
     if (!token) return { kind: "unauthorized" }
     const payload = {
@@ -118,11 +89,36 @@ export class AuthController {
       payload,
       { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
     );
+    if(!response.ok) return { kind: "unauthorized" }
 
-    return { exists: response.data.exists, accessToken: token, grantType: 'client_credentials'}
-
+    return { exists: response.data.exists, userId: response.data.id, accessToken: token, grantType: 'client_credentials'}
   }
 
+  async GetUserPreInfo(authToken?: string,userId?: string): Promise<any> {
+
+    let token;
+    if(!authToken){
+      token = await this.getAccessToken()
+      if (!token) return { kind: "unauthorized" }
+    }else {
+      token = authToken
+    }
+
+    if(!userId) return { kind: "forbidden" }
+    console.log(userId);
+    const payload = {
+      id: userId,
+    };
+    const response: ApiResponse<any> = await this.apisauce.get(
+      `/api/user/getuserpreinfo`,
+      payload,
+      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+    );
+
+    return response.data
+
+
+  }
 }
 
 // Singleton instance of the API for convenience

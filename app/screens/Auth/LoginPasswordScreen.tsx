@@ -1,7 +1,7 @@
 import { AppStackScreenProps } from "app/navigators"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { $presets, Icon, TextField, TextFieldAccessoryProps } from "app/components"
+import { $presets, Button, Icon, TextField, TextFieldAccessoryProps } from "app/components"
 import { Pressable, ScrollView, TextInput, TextStyle, ViewStyle } from "react-native"
 import { colors, spacing } from "app/theme"
 import { BlurView } from "expo-blur"
@@ -12,7 +12,9 @@ import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
 interface LoginPasswordScreenProps extends AppStackScreenProps<"LoginPassword"> {}
 
 export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(function LoginPasswordScreen(_props) {
-  const { navigation } = _props
+  const { navigation, route } = _props
+
+  const { avatar, fullName } = route.params;
   const authPasswordInput = useRef<TextInput>(null)
   const $drawerInsets = useSafeAreaInsetsStyle(["top","bottom"])
 
@@ -27,8 +29,7 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
   useEffect(() => {
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
+
 
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
@@ -77,8 +78,8 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
         <BlurView style={[$screenContentContainer, { paddingTop: $drawerInsets.paddingTop, paddingBottom: $drawerInsets.paddingBottom }]} intensity={120} tint="light">
           <ScrollView>
             <Animated.View>
-              <Animated.Image style={{width:120,height: 120, marginVertical: spacing.md}} borderRadius={60} source={{uri: 'https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp'}} resizeMode="cover" />
-              <Animated.Text  testID="login-heading" style={$presets.heading} >Muhammet Keskin</Animated.Text>
+              <Animated.Image style={{width:120,height: 120, marginVertical: spacing.md}} borderRadius={60} source={{uri: avatar}} resizeMode="cover" />
+              <Animated.Text  testID="login-heading" style={$presets.heading} >{fullName}</Animated.Text>
               <TextField
                 style={$textField}
                 ref={authPasswordInput}
@@ -95,7 +96,9 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
                 RightAccessory={PasswordRightAccessory}
                 inputWrapperStyle={{ alignItems: 'center'}}
                 autoFocus
+                keyboardType="visible-password"
               />
+              <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" />
             </Animated.View>
           </ScrollView>
 

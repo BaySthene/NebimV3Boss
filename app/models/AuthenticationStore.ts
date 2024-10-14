@@ -5,12 +5,12 @@ export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
   .props({
     authToken: types.maybe(types.string),
+    userId: types.maybe(types.string),
     authEmail: "",
     isAuthenticatedP: types.maybe(types.boolean),
     authTaxId: types.optional(types.string,""),
     authUserId: types.maybe(types.string),
     register: types.optional(RegisterModel,{firstName: "", lastName: ""}),
-    accessToken: types.maybe(types.string),
     expiresIn: types.maybe(types.string),
     refreshToken: types.maybe(types.string),
     grantType: types.optional(types.string, 'client_credentials')
@@ -39,6 +39,9 @@ export const AuthenticationStoreModel = types
     setAuthToken(value?: string) {
       store.authToken = value
     },
+    setUserId(value?: string) {
+      store.userId = value
+    },
     setGrantType(value: string) {
       store.grantType = value
     },
@@ -50,9 +53,6 @@ export const AuthenticationStoreModel = types
     },
     setAuthTaxId(value: string) {
       store.authTaxId = value
-    },
-    setAccessToken(value: string) {
-      store.accessToken = value
     },
     setExpireIn(value: string, s: string) {
       store.expiresIn = value

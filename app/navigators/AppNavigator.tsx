@@ -24,7 +24,10 @@ export type LoginPasswordScreenParams = {
 export type AppStackParamList = {
   Welcome: undefined
   Login: undefined
-  LoginPassword: undefined,
+  LoginPassword: {
+    avatar: string,
+    fullName: string
+  },
   Register: undefined,
   VerifyRegister: undefined,
   RegisterParams: undefined,

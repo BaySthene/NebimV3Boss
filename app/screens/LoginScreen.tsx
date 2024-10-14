@@ -17,6 +17,7 @@ import Animated from "react-native-reanimated"
 import { changeLanguage } from "app/i18n"
 import { authController } from "app/services/api/auth/authController"
 import { useStores } from "app/models"
+import { useUserPreInfo } from "app/Hooks/useUserPreInfo"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -24,8 +25,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const { navigation } = _props
   const  [ language, setLanguage ] = useState('tr');
   const {
-    authenticationStore: { refreshToken, accessToken, expiresIn },
+    authenticationStore: { refreshToken, authToken, expiresIn, authTaxId, authEmail, userId , setAuthEmail,setAuthTaxId, setAuthToken, setGrantType, setUserId},
   } = useStores()
+  const {userPreInfo, userPreInfoLoading, userPreInfoError} = useUserPreInfo(authToken, userId);
+
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
       await changeLanguage('en')
@@ -35,16 +38,22 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       setLanguage('tr')
     }
   }
-  useEffect(() => {
-    console.log(`refrsh: ${refreshToken} accs: ${accessToken}, expdate: ${expiresIn}`)
-  }, [])
+
+  const changeAccount = async () => {
+    setUserId(undefined)
+    setGrantType('client_credentials')
+    setAuthToken(undefined)
+    setAuthEmail('')
+    setAuthTaxId('')
+  }
 
 
   const handlePress = async () => {
-   // navigation.navigate("LoginPassword")
-    await authController.getAccessToken().then((res) => {
-      console.log(res);
+    navigation.navigate("LoginPassword", {
+      avatar: userPreInfo.avatar,
+      fullName: userPreInfo.fullName,
     })
+
   };
 
   return (
@@ -64,15 +73,23 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           <Text testID="login-heading" preset="heading" tx="base.name" style={$brandHeadingText} />
 
 
-          <Animated.Image style={{ width: 120, height: 120, marginVertical: spacing.md }} borderRadius={60}
-                          source={{ uri: "https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp" }}
-                          resizeMode="cover" />
 
-          <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText" style={$welcomeText} />
-          <Animated.Text testID="login-heading" style={$presets.heading}>Muhammet Keskin</Animated.Text>
+          {
+            !userPreInfoLoading && (
+              <>
+                <Animated.Image style={{ width: 120, height: 120, marginVertical: spacing.md }} borderRadius={60}
+                                source={{ uri: userPreInfo.avatar }}
+                                resizeMode="cover" />
+
+                <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText" style={$welcomeText} />
+                <Animated.Text testID="login-heading" style={$presets.heading}>{userPreInfo.fullName} </Animated.Text>
+              </>
+            )
+          }
+
           <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"
                   onPress={handlePress} />
-          <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" />
+          <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" onPress={changeAccount}/>
         </Animated.View>
       </ScrollView>
 

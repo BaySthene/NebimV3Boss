@@ -14,11 +14,13 @@ interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 export const RegisterScreen: FC<RegisterScreenProps> = observer(function RegisterScreen(_props) {
   const { navigation } = _props
   const {
-    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setGrantType, validationError, isRecorded },
+    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setGrantType, validationError, isRecorded, setUserId},
   } = useStores()
   const authVKNInput = useRef<TextInput>(null)
   const authEmailInput = useRef<TextInput>(null)
   const [ authEmailS, setAuthEmailS ] = useState(isRecorded ? authEmail : '');
+  const [ authVKNError, setAuthVKNError ] = useState('');
+  const [ authEmailError, setAuthEmailError ] = useState('');
   const [ authVKN, setAuthVKN ] = useState(isRecorded ? authTaxId : '');
   const  [ language, setLanguage ] = useState('tr');
   // callbacks
@@ -35,12 +37,16 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
 
     await authController.IsHaveAccount(authVKN, authEmailS).then((res: any) => {
       if(res.exists) {
+        setUserId(res.userId)
+        setGrantType('password')
         setAuthToken(res.accessToken)
         setAuthEmail(authEmailS)
         setAuthTaxId(authVKN)
-        setGrantType('password')
       }else {
-        navigation.navigate("RegisterParams")
+        if(res.error){
+          setAuthVKNError(res.error);
+        }
+       // navigation.navigate("RegisterParams")
       }
     })
   }
@@ -72,8 +78,8 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
               onSubmitEditing={() => authEmailInput.current && authEmailInput.current.focus()}
               inputWrapperStyle={{ alignItems: 'center'}}
               autoFocus
-              helper=""
-              HelperTextProps={{style: { color: colors.error }}}
+              helper={authVKNError}
+              HelperTextProps={{style: { color: colors.error, fontSize: 13 }}}
               keyboardType="number-pad"
             />
             <TextField
@@ -90,6 +96,8 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
               onSubmitEditing={() => registerHandle}
               inputWrapperStyle={{ alignItems: 'center'}}
               keyboardType="email-address"
+              helper={authEmailError}
+              HelperTextProps={{style: { color: colors.error, fontSize: 13 }}}
             />
             <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignInOrSignUp" onPress={registerHandle} />
 
