@@ -13,7 +13,9 @@ export const AuthenticationStoreModel = types
     register: types.optional(RegisterModel,{firstName: "", lastName: ""}),
     expiresIn: types.maybe(types.string),
     refreshToken: types.maybe(types.string),
-    grantType: types.optional(types.string, 'client_credentials')
+    grantType: types.optional(types.string, 'client_credentials'),
+    authAvatar: types.optional(types.string, ''),
+    authFullName: types.optional(types.string, '')
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -48,13 +50,19 @@ export const AuthenticationStoreModel = types
     setIsAuthenticated(value: boolean ) {
       store.isAuthenticatedP = value
     },
+    setAuthAvatar(value: string) {
+      store.authAvatar = value
+    },
+    setAuthFullName(value: string) {
+      store.authFullName = value
+    },
     setAuthEmail(value: string) {
-      store.authEmail = value.replace(/ /g, "")
+      store.authEmail = value
     },
     setAuthTaxId(value: string) {
       store.authTaxId = value
     },
-    setExpireIn(value: string, s: string) {
+    setExpireIn(value: string) {
       store.expiresIn = value
     },
     setRefreshToken(value: string) {
@@ -62,7 +70,6 @@ export const AuthenticationStoreModel = types
     },
     logout() {
       store.isAuthenticatedP = false
-      store.authEmail = ""
     },
   }))
 

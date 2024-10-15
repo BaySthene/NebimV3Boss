@@ -12,10 +12,11 @@ type headerStyleType = {
 }
 interface headerProps {
   headerStyle: headerStyleType,
-  toggleDrawerHandle:any
+  toggleDrawerHandle:any,
+  avatar: string
 }
 
-export const Header = ({headerStyle,toggleDrawerHandle}:headerProps) => {
+export const Header = ({headerStyle,toggleDrawerHandle, avatar}:headerProps) => {
   return (
     <Animated.View style={[$header, headerStyle]}>
       <View style={$menuUl}>
@@ -25,7 +26,7 @@ export const Header = ({headerStyle,toggleDrawerHandle}:headerProps) => {
         <Icon style={$headerIcon} icon="translate" />
         <Icon style={$headerIcon} icon="star" />
         <Icon style={$headerIcon} icon="bell" />
-        <Image style={{width:45,height: 45, marginHorizontal: spacing.xs}} borderRadius={60} source={{uri: 'https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp'}} resizeMode="cover" />
+        <Image style={{width:45,height: 45, marginHorizontal: spacing.xs}} borderRadius={60} source={{uri: avatar}} resizeMode="cover" />
       </View>
     </Animated.View>
   )

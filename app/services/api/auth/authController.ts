@@ -155,7 +155,23 @@ export class AuthController {
       username: authEmail,
       password: authPassword
     })
-    return response.data;
+    if(response.data.access_token){
+      const userInfo: any = await this.apisauce.post("/connect/userinfo", {
+        grant_type: "client_credentials",
+        client_id: "app.client",
+      }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${response.data.access_token}` } })
+      if(!userInfo.data.sub) return { kind: "unauthorized" }
+      return {
+        access_token: response.data.access_token,
+        refresh_token: response.data.refresh_token,
+        expire_in: response.data.expire_in,
+        userId: userInfo.data.sub,
+        avatar: userInfo.data.avatar,
+        fullName: `${userInfo.data.given_name} ${userInfo.data.family_name}`,
+      };
+    }else {
+      if(!response.data.access_token) return { kind: "unauthorized" }
+    }
   }
 }
 

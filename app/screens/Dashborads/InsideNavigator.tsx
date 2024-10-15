@@ -25,7 +25,9 @@ import { BestAndWorstProduct, BestAndWorstProductDataType } from "app/components
 import { AgendaDataType, FinancialCalendar } from "app/components/Custom/widget/FinancialCalendar"
 interface InsideNavigatorScreenProps extends AppStackScreenProps<"InsideNavigator"> {}
 export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(function InsideNavigatorScreen(_props) {
-
+  const {
+    authenticationStore: { authAvatar, authFullName },
+  } = useStores()
   const data = [
     [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }],
     [{ label: '1', value: 112 }, { label: '2', value: 322 }, { label: '3', value: 231 }, { label: '4', value: 8329 }, { label: '5', value: 1234 }, { label: '6', value: 100 }, { label: '7', value: 10000 }]
@@ -145,12 +147,15 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
           </ScrollView>
           <View style={$drawerFooterView}>
             <View style={$drawerRecognitionCard}>
-              <Image style={{width:45,height: 45, marginHorizontal: spacing.xs}} borderRadius={60} source={{uri: 'https://metropoldigital.com/wp-content/uploads/2022/12/Avatar_TWoW_Neytiri_Textless_Poster-819x1024.webp'}} resizeMode="cover" />
+              <Image style={{width:45,height: 45 ,marginRight: 10}} borderRadius={60} source={{uri: authAvatar}} resizeMode="cover" />
               <View>
-                <Text preset="subheading" text="Muhammet" />
-                <Text preset="formLabel" text="Yönetici" />
+                <Text preset="formLabel" text={authFullName} />
+                <Text preset="formHelper" text="Yönetici" />
               </View>
-              <Icon style={$headerIcon} icon="exit" onPress={logout} />
+              <View>
+                <Icon style={$headerIcon} icon="exit" onPress={logout} />
+
+              </View>
             </View>
           </View>
         </View>
@@ -161,7 +166,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
         safeAreaEdges={["top"]}
         contentContainerStyle={$screenContentContainer}
       >
-        <Header headerStyle={headerStyle} toggleDrawerHandle={toggleDrawer} />
+        <Header headerStyle={headerStyle} toggleDrawerHandle={toggleDrawer} avatar={authAvatar} />
         <Animated.ScrollView
           nestedScrollEnabled={true}
           onScroll={scrollHandler}
@@ -220,7 +225,8 @@ const $drawerFooterView: ViewStyle = {
 const $drawerRecognitionCard: ViewStyle = {
   backgroundColor: "rgb(232, 247, 255)",
   borderRadius: 8,
-  padding: 20,
+  paddingHorizontal: 10,
+  paddingVertical: 20,
   justifyContent: 'space-between',
   alignItems: 'center',
   flexDirection: 'row',
@@ -228,7 +234,7 @@ const $drawerRecognitionCard: ViewStyle = {
 
 const $headerIcon: ImageStyle = {
   marginHorizontal: 10,
-  height: 24,
-  width: 24,
+  height: 20,
+  width: 20,
 }
 

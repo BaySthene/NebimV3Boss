@@ -15,7 +15,6 @@ import { AppStackScreenProps } from "../navigators"
 import { spacing } from "../theme"
 import Animated from "react-native-reanimated"
 import { changeLanguage } from "app/i18n"
-import { authController } from "app/services/api/auth/authController"
 import { useStores } from "app/models"
 import { useUserPreInfo } from "app/Hooks/useUserPreInfo"
 
@@ -28,7 +27,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     authenticationStore: { refreshToken, authToken, expiresIn, authTaxId, authEmail, userId , setAuthEmail,setAuthTaxId, setAuthToken, setGrantType, setUserId},
   } = useStores()
   const {userPreInfo, userPreInfoLoading, userPreInfoError} = useUserPreInfo(authToken, userId);
-
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
       await changeLanguage('en')
@@ -71,8 +69,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         </View>
         <Animated.View>
           <Text testID="login-heading" preset="heading" tx="base.name" style={$brandHeadingText} />
-
-
 
           {
             !userPreInfoLoading && (

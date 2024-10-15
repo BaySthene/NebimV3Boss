@@ -13,7 +13,7 @@ interface RegisterParamsProps extends AppStackScreenProps<"RegisterParams"> {}
 export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function RegisterParamsScreen(_props) {
   const { navigation } = _props
   const {
-    authenticationStore: { validationError, isRecorded, register, authEmail, authTaxId, authToken, setIsAuthenticated ,setRefreshToken, setExpireIn, setAuthToken },
+    authenticationStore: { validationError, isRecorded, register, authEmail, authTaxId, authToken, setIsAuthenticated ,setRefreshToken, setExpireIn, setAuthToken, setUserId, setAuthAvatar, setAuthFullName },
   } = useStores()
   const authFirstNameInput = useRef<TextInput>(null)
   const authLastNameInput = useRef<TextInput>(null)
@@ -23,6 +23,7 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
   const [ authLastName, setAuthLastName ] = useState(isRecorded ? register.lastName : '');
   const [authPassword, setAuthPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
+  const [ registerButtonToggle, setRegisterButtonToggle ] = useState(true)
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
       await changeLanguage('en')
@@ -49,11 +50,15 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
   )
 
   const registerHandle = async () => {
+    setRegisterButtonToggle(false);
     authController.PostRegister(authToken, authFirstName, authLastName, authPassword, authEmail, authTaxId).then((res) => {
-      console.log(res)
+      setRegisterButtonToggle(true);
+      setUserId(res.userId)
       setRefreshToken(res.refresh_token)
       setAuthToken(res.access_token)
-      setExpireIn('expires_in', new Date(Date.now() + res.expires_in * 1000).toString())
+      setAuthAvatar(res.avatar)
+      setAuthFullName(res.fullName)
+      setExpireIn(new Date(Date.now() + res.expire_in * 1000).toString())
       setIsAuthenticated(true)
     })
   }
@@ -89,7 +94,9 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
              autoCorrect
              labelTx="loginScreen.firstNameLabel"
              placeholderTx="loginScreen.firstNamePlaceholder"
-             onSubmitEditing={() => authFirstNameInput.current && authLastNameInput.current.focus()}
+             onSubmitEditing={() => {
+               authFirstNameInput.current && authLastNameInput.current.focus()
+             }}
              inputWrapperStyle={{ alignItems: 'center'}}
              autoFocus
              keyboardType="default"
@@ -106,7 +113,6 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
              placeholderTx="loginScreen.lastNamePlaceholder"
              onSubmitEditing={() => authLastNameInput.current && authPasswordInput.current.focus()}
              inputWrapperStyle={{ alignItems: 'center'}}
-             autoFocus
              keyboardType="default"
            />
            <TextField
@@ -123,10 +129,16 @@ export const RegisterParamsScreen: FC<RegisterParamsProps> = observer(function R
              placeholderTx="loginScreen.passwordFieldPlaceholder"
              RightAccessory={PasswordRightAccessory}
              inputWrapperStyle={{ alignItems: 'center'}}
-             autoFocus
              keyboardType="visible-password"
            />
-           <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" onPress={registerHandle}  />
+           {
+             registerButtonToggle ? (
+               <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" onPress={registerHandle}  />
+             ) : (
+               <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.loading" disabled={true}  />
+             )
+           }
+
 
          </Animated.View>
 

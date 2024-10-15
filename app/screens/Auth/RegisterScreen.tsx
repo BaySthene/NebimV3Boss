@@ -18,7 +18,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
   } = useStores()
   const authVKNInput = useRef<TextInput>(null)
   const authEmailInput = useRef<TextInput>(null)
-  const [ authEmailS, setAuthEmailS ] = useState(isRecorded ? authEmail : '');
+  const [ authEmailS, setAuthEmailS ] = useState('');
   const [ authVKNError, setAuthVKNError ] = useState('');
   const [ authEmailError, setAuthEmailError ] = useState('');
   const [ authVKN, setAuthVKN ] = useState(isRecorded ? authTaxId : '');
@@ -37,10 +37,10 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
   const registerHandle = async () => {
     setAuthVKNError('');
     setRegisterButtonToggle(false);
+    setAuthEmail(authEmailS)
+    setAuthTaxId(authVKN)
     await authController.IsHaveAccount(authVKN, authEmailS).then((res: any) => {
       setRegisterButtonToggle(true);
-      setAuthEmail(authEmailS)
-      setAuthTaxId(authVKN)
       if(res.exists) {
         setUserId(res.userId)
         setGrantType('password')
@@ -48,8 +48,9 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
       }else {
         if(res.error){
           setAuthVKNError(res.error);
+        }else{
+          navigation.navigate("RegisterParams")
         }
-        navigation.navigate("RegisterParams")
       }
     })
   }

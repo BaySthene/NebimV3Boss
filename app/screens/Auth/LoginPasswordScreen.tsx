@@ -2,13 +2,13 @@ import { AppStackScreenProps } from "app/navigators"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { $presets, Button, Icon, TextField, TextFieldAccessoryProps } from "app/components"
-import { Pressable, ScrollView, TextInput, TextStyle, ViewStyle } from "react-native"
+import { Pressable, ScrollView, TextInput, TextStyle, View, ViewStyle } from "react-native"
 import { colors, spacing } from "app/theme"
 import { BlurView } from "expo-blur"
 import { useStores } from "app/models"
 import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated"
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
-
+import { authController } from "app/services/api/auth/authController"
 interface LoginPasswordScreenProps extends AppStackScreenProps<"LoginPassword"> {}
 
 export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(function LoginPasswordScreen(_props) {
@@ -20,28 +20,24 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
 
   const [authPassword, setAuthPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
+  const [loginButtonToggle, setLoginButtonToggle] = useState(true)
   const {
-    authenticationStore: { setAuthEmail, setAuthToken, setIsAuthenticated, validationError },
+    authenticationStore: { setUserId, setRefreshToken, setExpireIn, setAuthToken, setIsAuthenticated, validationError, authEmail, setAuthAvatar, setAuthFullName  },
   } = useStores()
 
-  useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-
-
-    // Return a "cleanup" function that React will run when the component unmounts
-    return () => {
-      setAuthPassword("")
-      setAuthEmail("")
-    }
-  }, [])
-
-  const error = isSubmitted ? validationError : ""
-
-  function login() {
-    setIsSubmitted(true)
+  async function loginHandle() {
+    setLoginButtonToggle(false)
+    await authController.PostLogin(authPassword, authEmail).then((res) => {
+      setLoginButtonToggle(true)
+      setUserId(res.userId)
+      setRefreshToken(res.refresh_token)
+      setAuthToken(res.access_token)
+      setExpireIn(new Date(Date.now() + res.expire_in * 1000).toString())
+      setAuthAvatar(res.avatar)
+      setAuthFullName(res.fullName)
+      setIsAuthenticated(true)
+    });
+    /*setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
     if (validationError) return
@@ -49,12 +45,10 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
     // Make a request to your server to get an authentication token.
     // If successful, reset the fields and set the token.
     setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
+
 
     // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
-    setIsAuthenticated(true);
+  */
   }
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
@@ -77,7 +71,9 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
       }}>
         <BlurView style={[$screenContentContainer, { paddingTop: $drawerInsets.paddingTop, paddingBottom: $drawerInsets.paddingBottom }]} intensity={120} tint="light">
           <ScrollView>
+
             <Animated.View>
+
               <Animated.Image style={{width:120,height: 120, marginVertical: spacing.md}} borderRadius={60} source={{uri: avatar}} resizeMode="cover" />
               <Animated.Text  testID="login-heading" style={$presets.heading} >{fullName}</Animated.Text>
               <TextField
@@ -92,13 +88,20 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
                 secureTextEntry={isAuthPasswordHidden}
                 labelTx="loginScreen.passwordFieldLabel"
                 placeholderTx="loginScreen.passwordFieldPlaceholder"
-                onSubmitEditing={login}
+                onSubmitEditing={loginHandle}
                 RightAccessory={PasswordRightAccessory}
                 inputWrapperStyle={{ alignItems: 'center'}}
                 autoFocus
                 keyboardType="visible-password"
               />
-              <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" />
+              {
+                loginButtonToggle ? (
+                  <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn" onPress={loginHandle} />
+                ) : (
+                  <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.loading" disabled={true}  />
+                )
+              }
+
             </Animated.View>
           </ScrollView>
 
