@@ -18,7 +18,7 @@ export const SalesOverviewList: React.FC<SalesOverviewListProps> = ({data, scrol
         const scale = interpolate(
           scrollX.value,
           [(index - 1) * width, index * width, (index + 1) * width],
-          [0.8, 1, 0.8]
+          [0.9, 1, 1]
         );
         return {
           transform: [{ scale }],

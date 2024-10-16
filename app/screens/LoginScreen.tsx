@@ -24,9 +24,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const { navigation } = _props
   const  [ language, setLanguage ] = useState('tr');
   const {
-    authenticationStore: { refreshToken, authToken, expiresIn, authTaxId, authEmail, userId , setAuthEmail,setAuthTaxId, setAuthToken, setGrantType, setUserId},
+    authenticationStore: { refreshToken, authToken, expiresIn, authTaxId, authEmail, userId , setAuthEmail,setAuthTaxId, setAuthToken, setGrantType, setUserId, setRefreshToken, setExpireIn},
   } = useStores()
-  const {userPreInfo, userPreInfoLoading, userPreInfoError} = useUserPreInfo(authToken, userId);
+  const {userPreInfo, userPreInfoLoading, userPreInfoError} = useUserPreInfo(refreshToken, authToken, userId, expiresIn);
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
       await changeLanguage('en')
@@ -43,6 +43,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     setAuthToken(undefined)
     setAuthEmail('')
     setAuthTaxId('')
+    setRefreshToken(undefined)
+    setExpireIn(undefined)
   }
 
 
@@ -69,9 +71,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         </View>
         <Animated.View>
           <Text testID="login-heading" preset="heading" tx="base.name" style={$brandHeadingText} />
-
           {
-            !userPreInfoLoading && (
+
+            !userPreInfoLoading ? (
               <>
                 <Animated.Image style={{ width: 120, height: 120, marginVertical: spacing.md }} borderRadius={60}
                                 source={{ uri: userPreInfo.avatar }}
@@ -79,13 +81,20 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
                 <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText" style={$welcomeText} />
                 <Animated.Text testID="login-heading" style={$presets.heading}>{userPreInfo.fullName} </Animated.Text>
+                <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"
+                        onPress={handlePress} />
+                <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" onPress={changeAccount}/>
+              </>
+            ) : (
+              <>
+                <Animated.View style={{ width: 120, height: 120, marginVertical: spacing.md, borderRadius: 60, backgroundColor: 'white' }} />
+                <Animated.View style={{ width: '60%', height: 25, backgroundColor: 'white',marginBottom: spacing.sm }} />
+                <Animated.View style={{ width: '90%', height: 40, backgroundColor: 'white' }} />
+                <Animated.View style={{ width: '100%', height: 50, backgroundColor: 'white',marginVertical: spacing.md }} />
+                <Animated.View style={{ width: '60%', height: 15, backgroundColor: 'white',marginBottom: spacing.sm }} />
               </>
             )
           }
-
-          <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"
-                  onPress={handlePress} />
-          <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" onPress={changeAccount}/>
         </Animated.View>
       </ScrollView>
 

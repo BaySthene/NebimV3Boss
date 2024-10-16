@@ -24,8 +24,6 @@ export const Header = ({headerStyle,toggleDrawerHandle, avatar}:headerProps) => 
       </View>
       <View style={$menuUl}>
         <Icon style={$headerIcon} icon="translate" />
-        <Icon style={$headerIcon} icon="star" />
-        <Icon style={$headerIcon} icon="bell" />
         <Image style={{width:45,height: 45, marginHorizontal: spacing.xs}} borderRadius={60} source={{uri: avatar}} resizeMode="cover" />
       </View>
     </Animated.View>

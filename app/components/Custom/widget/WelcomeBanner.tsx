@@ -5,22 +5,22 @@ import { WelcomeBg } from "assets/svg/WelcomeBg"
 import React from "react"
 import { colors } from "app/theme"
 
-export const WelcomeBanner = () => {
+export const WelcomeBanner = ({fullName}) => {
   return (
     <View style={$bannerCard}>
       <View style={$welcomeBannerCard}>
         <View style={{justifyContent: 'flex-start'}}>
          <View style={{ flexDirection: 'row' }}>
-           <Text style={{marginBottom:20}} preset="subheading" tx="banners.welcome.welcome"></Text>
-           <Text style={{marginBottom:20}} preset="subheading" text=" Muhammet Keskin"></Text>
+           <Text style={{marginBottom:20}} preset="formLabel" tx="banners.welcome.welcome"></Text>
+           <Text style={{marginBottom:20}} preset="formLabel"> { fullName }</Text>
          </View>
           <View style={$welcomeBannerCardStatisticView}>
             <View style={$welcomeBannerCardStatisticDataView}>
-              <Text preset="heading">123.000₺<GreenArrow /></Text>
+              <Text preset="subheading">123.000₺<GreenArrow /></Text>
               <Text preset="formHelper" tx="banners.welcome.salesToday" />
             </View>
             <View style={$welcomeBannerCardStatisticDataView}>
-              <Text preset="heading">1262<GreenArrow /></Text>
+              <Text preset="subheading">1262<GreenArrow /></Text>
               <Text preset="formHelper" tx="banners.welcome.salesCount" />
             </View>
           </View>
@@ -39,10 +39,6 @@ const $bannerCard: ViewStyle = {
   marginVertical: 16,
   borderRadius:10,
   shadowColor: 'rgb(38, 43, 67)',
-  shadowOffset: { width: 4, height: 14 },
-  shadowRadius: 3.84,
-  shadowOpacity: 0.8,
-  elevation: 2,
   paddingHorizontal: 16,
   paddingTop: 32,
   paddingBottom: 32,

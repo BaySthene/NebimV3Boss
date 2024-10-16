@@ -5,7 +5,7 @@ import {
 } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect } from "react"
 import { useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
@@ -13,6 +13,7 @@ import { useStores } from "../models"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 import { DashboardParamList } from "app/screens"
+import { authController } from "app/services/api/auth/authController"
 
 export type LoginPasswordScreenParams = {
   LoginPassword: {
@@ -44,8 +45,47 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated, isRegistered },
+    authenticationStore: { isAuthenticated, isRegistered, expiresIn, setExpireIn, setUserId, setGrantType, setAuthToken, setRefreshToken, refreshToken, setIsAuthenticated },
   } = useStores()
+
+  const changeAccount = async () => {
+    setUserId(undefined)
+    setGrantType('client_credentials')
+    setAuthToken(undefined)
+    setRefreshToken(undefined)
+    setExpireIn(undefined)
+  }
+
+  useEffect(() =>  {
+    const getNewToken = async (refreshToken: string) => {
+      await authController.getRefreshToken(refreshToken).then((res) => {
+         if(typeof res !== null) {
+           setRefreshToken(res.refresh_token)
+           setAuthToken(res.access_token)
+           setExpireIn(new Date(Date.now() + res.expires_in * 1000).toString())
+         }else {
+           setIsAuthenticated(false)
+         }
+      })
+    }
+    if(typeof expiresIn !== undefined) {
+      if(expiresIn != "Invalid Date") {
+        if(Date.now() > new Date(expiresIn).getTime()) {
+          getNewToken(refreshToken)
+        }else {
+          setIsAuthenticated(false)
+        }
+      }else {
+        changeAccount();
+        setIsAuthenticated(false)
+      }
+      // @ts-ignore
+
+    }else {
+      changeAccount();
+      setIsAuthenticated(false)
+    }
+  }, [])
 
   return (
     <Stack.Navigator
@@ -80,8 +120,6 @@ const AppStack = observer(function AppStack() {
         </>
       )}
 
-      {/** 🔥 Your screens go here */}
-      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
 })

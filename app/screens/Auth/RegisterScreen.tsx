@@ -14,7 +14,7 @@ interface RegisterScreenProps extends AppStackScreenProps<"Register"> {}
 export const RegisterScreen: FC<RegisterScreenProps> = observer(function RegisterScreen(_props) {
   const { navigation } = _props
   const {
-    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setGrantType, validationError, isRecorded, setUserId},
+    authenticationStore: { setAuthEmail,setAuthTaxId, setAuthToken,authEmail,authTaxId, setGrantType, validationError, isRecorded, setUserId, refreshToken, setExpireIn},
   } = useStores()
   const authVKNInput = useRef<TextInput>(null)
   const authEmailInput = useRef<TextInput>(null)
@@ -42,6 +42,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
     await authController.IsHaveAccount(authVKN, authEmailS).then((res: any) => {
       setRegisterButtonToggle(true);
       if(res.exists) {
+        setExpireIn(new Date(Date.now() + res.expiresIn * 1000).toString())
         setUserId(res.userId)
         setGrantType('password')
         setAuthToken(res.accessToken)

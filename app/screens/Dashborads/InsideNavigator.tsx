@@ -26,10 +26,13 @@ import { AgendaDataType, FinancialCalendar } from "app/components/Custom/widget/
 interface InsideNavigatorScreenProps extends AppStackScreenProps<"InsideNavigator"> {}
 export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(function InsideNavigatorScreen(_props) {
   const {
-    authenticationStore: { authAvatar, authFullName },
+    authenticationStore: { authAvatar, authFullName, expiresIn },
   } = useStores()
+  console.log(expiresIn)
   const data = [
     [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }],
+    [{ label: 'pzt', value: 112 }, { label: 'sl', value: 322 }, { label: 'crs', value: 231 }, { label: 'prs', value: 8329 }, { label: 'cm', value: 1234 }, { label: 'cmt', value: 100 }, { label: 'pz', value: 10000 }],
+    [{ label: 'Ock', value: 112 }, { label: 'Sbt', value: 322 }, { label: 'Mrt', value: 231 }, { label: 'Nsn', value: 8329 }, { label: 'May', value: 1234 }, { label: 'Haz', value: 100 }, { label: 'Tem', value: 10000 },  { label: 'Ağs', value: 231 }, { label: 'Eyl', value: 8329 }, { label: 'Ekm', value: 1234 }, { label: 'Kas', value: 100 }, { label: 'Arl', value: 10000 }],
     [{ label: '1', value: 112 }, { label: '2', value: 322 }, { label: '3', value: 231 }, { label: '4', value: 8329 }, { label: '5', value: 1234 }, { label: '6', value: 100 }, { label: '7', value: 10000 }]
   ];
   const productData: BestAndWorstProductDataType[] = [
@@ -112,6 +115,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
     }
   }
   const animatedValue = useSharedValue(0);
+
   useEffect(() => {
     animatedValue.value = withRepeat(
       withSequence(
@@ -124,6 +128,11 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
     return () => timeout.current && clearTimeout(timeout.current)
 
   }, [])
+
+
+
+
+
   const $drawerInsets = useSafeAreaInsetsStyle(["top","bottom"])
 
 
@@ -175,12 +184,13 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
             paddingTop: 60,
           }}
         >
-          <DemoCountdown animatedValue={animatedValue} />
+          {/*<DemoCountdown animatedValue={animatedValue} />*/}
           <View style={$scrollView}>
+            <WelcomeBanner fullName={authFullName}/>
             <CarouselCard data={data} scrollX={scrollXSalesOverview}>
               <SalesOverviewList data={data} scrollX={scrollXSalesOverview} />
             </CarouselCard>
-            <YearlyStatistics />
+            {/* <YearlyStatistics />
             <CarouselCard data={data} scrollX={scrollXGivenPayments}>
               <GivenPaymentsList data={data} scrollX={scrollXGivenPayments} />
             </CarouselCard>
@@ -188,7 +198,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
               <GivenPaymentsList data={data} scrollX={scrollXGivenPayments} />
             </CarouselCard>
             <FinancialCalendar agendaData={agendaDatas} />
-            <BestAndWorstProduct data={productData} />
+            <BestAndWorstProduct data={productData} />*/}
           </View>
 
 

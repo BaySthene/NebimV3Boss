@@ -46,28 +46,23 @@ export class AuthController {
         grant_type: "client_credentials",
         client_id: "app.client",
       })
-      return response.data.access_token
+      return {
+        expiresIn: response.data.expires_in,
+        token: response.data.access_token,
+      }
   }
 
 
- /* async refreshToken(): Promise<string | null> {
-
-    if (!refreshToken) return null
-
+  async getRefreshToken(refreshToken: string): Promise<any | null> {
     const response: ApiResponse<any> = await this.apisauce.post("/connect/token", {
       grant_type: "refresh_token",
       refresh_token: refreshToken,
       client_id: "app.client",
     })
     // eslint-disable-next-line camelcase
-    const { access_token, refresh_token, expires_in } = response.data
-    setAccessToken(access_token)
-    setRefreshToken(refresh_token)
-    // eslint-disable-next-line camelcase
-    setExpireIn('expires_in', new Date(Date.now() + expires_in * 1000).toString())
-    // eslint-disable-next-line camelcase
-    return access_token
-  } */
+    return response.data
+
+  }
 
   /**
    * Gets a list of recent React Native Radio episodes.
@@ -78,7 +73,7 @@ export class AuthController {
     if (TaxId?.length !== 10 && TaxId?.length !== 11) return { exists: false, error: 'VKN / TCKN 10 veya 11 karakterden oluşmalı' };
     if(!emailRegex.test(Email)) return { exists: false, error: 'E-posta adresini doğru girmelisiniz.' };
     const token = await this.getAccessToken()
-    if (!token) return { kind: "unauthorized" }
+    if (!token.token) return { kind: "unauthorized" }
     const payload = {
       taxId: TaxId,
       email: Email
@@ -87,35 +82,54 @@ export class AuthController {
     const response: ApiResponse<any> = await this.apisauce.post(
       `/api/user/checkuser`,
       payload,
-      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.token}` } }
     );
     if(!response.ok) return { kind: "unauthorized" }
-
-    return { exists: response.data.exists, userId: response.data.id, accessToken: token, grantType: 'client_credentials'}
+    return { exists: response.data.exists, userId: response.data.id, accessToken: token.token, grantType: 'client_credentials', expiresIn: token.expiresIn}
   }
 
-  async GetUserPreInfo(authToken?: string,userId?: string): Promise<any> {
-
+  async GetUserPreInfo(refreshToken?: string, authToken?: string,userId?: string, expiresIn: string): Promise<any> {
     let token;
     if(!authToken){
       token = await this.getAccessToken()
-      if (!token) return { kind: "unauthorized" }
+      if (!token.token) return { kind: "unauthorized" }
     }else {
-      token = authToken
+      if(Date.now() < new Date(expiresIn).getTime()) {
+        token = authToken
+        token = {
+          token: authToken,
+          expiresIn: expiresIn,
+
+        }
+      }else {
+        if(typeof refreshToken !== undefined) {
+          const newToken = await this.getRefreshToken(refreshToken)
+          token = {
+            token: newToken.access_token,
+            expiresIn: newToken.expires_in,
+            refreshToken: newToken.refresh_token
+          }
+        }else {
+          token = await this.getAccessToken()
+          if (!token.token) return { kind: "unauthorized" }
+        }
+      }
     }
 
     if(!userId) return { kind: "forbidden" }
-    console.log(userId);
     const payload = {
       id: userId,
     };
     const response: ApiResponse<any> = await this.apisauce.get(
       `/api/user/getuserpreinfo`,
       payload,
-      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.token}` } }
     );
-
-    return response.data
+    return {
+      avatar: response.data.avatar,
+      fullName: response.data.fullName,
+      access: token
+    }
 
 
   }
@@ -124,7 +138,7 @@ export class AuthController {
     let token;
     if(!authToken){
       token = await this.getAccessToken()
-      if (!token) return { kind: "unauthorized" }
+      if (!token.token) return { kind: "unauthorized" }
     }else {
       token = authToken
     }
@@ -139,7 +153,7 @@ export class AuthController {
     const response: ApiResponse<any> = await this.apisauce.post(
       `/api/user/signup`,
       payload,
-      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
+      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.token}` } }
     );
     if(response.data.isRegister) {
       return await this.PostLogin(authPassword, authEmail);
@@ -164,7 +178,7 @@ export class AuthController {
       return {
         access_token: response.data.access_token,
         refresh_token: response.data.refresh_token,
-        expire_in: response.data.expire_in,
+        expires_in: response.data.expires_in,
         userId: userInfo.data.sub,
         avatar: userInfo.data.avatar,
         fullName: `${userInfo.data.given_name} ${userInfo.data.family_name}`,

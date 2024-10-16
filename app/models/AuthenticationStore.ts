@@ -62,10 +62,10 @@ export const AuthenticationStoreModel = types
     setAuthTaxId(value: string) {
       store.authTaxId = value
     },
-    setExpireIn(value: string) {
+    setExpireIn(value?: string) {
       store.expiresIn = value
     },
-    setRefreshToken(value: string) {
+    setRefreshToken(value?: string) {
       store.refreshToken = value
     },
     logout() {

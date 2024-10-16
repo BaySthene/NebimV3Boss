@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react"
 import { authController } from "app/services/api/auth/authController"
 
-export const useUserPreInfo = (authToken: string,userId: string) => {
-  const [userPreInfo, setUserPreInfo] = useState({avatar: '', fullName: ''});
+export const useUserPreInfo = (refreshToken: string | undefined, authToken: string,userId: string, expiresIn: string) => {
+  const [userPreInfo, setUserPreInfo] = useState({avatar: '', fullName: '', access : { token: '', expiresIn: '', refreshToken: '' }});
   const [userPreInfoLoading, setUserPreInfoLoading] = useState<boolean>(true);
   const [userPreInfoError, setUserPreInfoError] = useState({});
 
   useEffect(() => {
-    const getUserPreInfo = async (authToken: string,userId: string) => {
+    const getUserPreInfo = async (refreshToken: string | undefined, authToken: string, userId: string, expiresIn: string) => {
       try {
-        const UserPreInfo = await  authController.GetUserPreInfo(authToken,userId);
+        const UserPreInfo = await  authController.GetUserPreInfo(refreshToken, authToken,userId,expiresIn)
         setUserPreInfo({
           avatar: UserPreInfo.avatar,
           fullName: UserPreInfo.fullName,
+          access: UserPreInfo.access,
         });
       }
       catch (e: any) {
@@ -22,7 +23,7 @@ export const useUserPreInfo = (authToken: string,userId: string) => {
         setUserPreInfoLoading(false);
       }
     };
-    getUserPreInfo(authToken, userId);
+    getUserPreInfo(refreshToken, authToken, userId, expiresIn);
   }, [])
   return { userPreInfo, userPreInfoLoading, userPreInfoError };
 };

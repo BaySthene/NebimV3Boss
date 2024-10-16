@@ -32,7 +32,7 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
       setUserId(res.userId)
       setRefreshToken(res.refresh_token)
       setAuthToken(res.access_token)
-      setExpireIn(new Date(Date.now() + res.expire_in * 1000).toString())
+      setExpireIn(new Date(Date.now() + res.expires_in * 1000).toString())
       setAuthAvatar(res.avatar)
       setAuthFullName(res.fullName)
       setIsAuthenticated(true)
