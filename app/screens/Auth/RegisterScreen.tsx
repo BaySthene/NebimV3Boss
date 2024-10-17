@@ -47,6 +47,7 @@ export const RegisterScreen: FC<RegisterScreenProps> = observer(function Registe
         setGrantType('password')
         setAuthToken(res.accessToken)
       }else {
+        console.log(res)
         if(res.error){
           setAuthVKNError(res.error);
         }else{

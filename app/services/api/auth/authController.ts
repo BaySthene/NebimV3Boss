@@ -46,6 +46,8 @@ export class AuthController {
         grant_type: "client_credentials",
         client_id: "app.client",
       })
+
+    if (!response.ok) return  { exists: false, error: 'Kimlik doğrulama sırasında bir hata oluştu' };
       return {
         expiresIn: response.data.expires_in,
         token: response.data.access_token,
@@ -59,6 +61,8 @@ export class AuthController {
       refresh_token: refreshToken,
       client_id: "app.client",
     })
+
+    if (!response.ok) return  { exists: false, error: 'Kimlik doğrulama sırasında bir hata oluştu' };
     // eslint-disable-next-line camelcase
     return response.data
 
@@ -73,7 +77,7 @@ export class AuthController {
     if (TaxId?.length !== 10 && TaxId?.length !== 11) return { exists: false, error: 'VKN / TCKN 10 veya 11 karakterden oluşmalı' };
     if(!emailRegex.test(Email)) return { exists: false, error: 'E-posta adresini doğru girmelisiniz.' };
     const token = await this.getAccessToken()
-    if (!token.token) return { kind: "unauthorized" }
+    if (!token.token) return  { exists: false, error: 'Kimlik doğrulama sırasında bir hata oluştu' };
     const payload = {
       taxId: TaxId,
       email: Email
@@ -84,15 +88,13 @@ export class AuthController {
       payload,
       { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.token}` } }
     );
-    if(!response.ok) return { kind: "unauthorized" }
-    return { exists: response.data.exists, userId: response.data.id, accessToken: token.token, grantType: 'client_credentials', expiresIn: token.expiresIn}
+    return { exists: response.data.exists, error: response.data.error, userId: response.data.id, accessToken: token.token, grantType: 'client_credentials', expiresIn: token.expiresIn}
   }
 
   async GetUserPreInfo(refreshToken?: string, authToken?: string,userId?: string, expiresIn: string): Promise<any> {
     let token;
     if(!authToken){
       token = await this.getAccessToken()
-      if (!token.token) return { kind: "unauthorized" }
     }else {
       if(Date.now() < new Date(expiresIn).getTime()) {
         token = authToken
@@ -111,10 +113,13 @@ export class AuthController {
           }
         }else {
           token = await this.getAccessToken()
-          if (!token.token) return { kind: "unauthorized" }
         }
       }
     }
+    if (typeof token.exists != 'undefined' ) {
+      return  { exists: false, error: token.error };
+    }
+
 
     if(!userId) return { kind: "forbidden" }
     const payload = {
@@ -125,6 +130,11 @@ export class AuthController {
       payload,
       { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.token}` } }
     );
+
+    if (!response.ok ) {
+      return  { exists: false, error: 'Kimlik doğrulama sırasında bir hata oluştu' };
+    }
+    console.log(response)
     return {
       avatar: response.data.avatar,
       fullName: response.data.fullName,
@@ -138,7 +148,7 @@ export class AuthController {
     let token;
     if(!authToken){
       token = await this.getAccessToken()
-      if (!token.token) return { kind: "unauthorized" }
+      if (!token.token) return  { exists: false, error: 'Kimlik doğrulama sırasında bir hata oluştu' };
     }else {
       token = authToken
     }
@@ -169,6 +179,7 @@ export class AuthController {
       username: authEmail,
       password: authPassword
     })
+    if(response.originalError != null) return { auth: false, error: 'Kimlik doğrulama sırasında bir hata oluştu.' };
     if(response.data.access_token){
       const userInfo: any = await this.apisauce.post("/connect/userinfo", {
         grant_type: "client_credentials",
@@ -176,6 +187,7 @@ export class AuthController {
       }, { headers: { "Content-Type": "application/json", Authorization: `Bearer ${response.data.access_token}` } })
       if(!userInfo.data.sub) return { kind: "unauthorized" }
       return {
+        auth: true,
         access_token: response.data.access_token,
         refresh_token: response.data.refresh_token,
         expires_in: response.data.expires_in,
@@ -184,7 +196,11 @@ export class AuthController {
         fullName: `${userInfo.data.given_name} ${userInfo.data.family_name}`,
       };
     }else {
-      if(!response.data.access_token) return { kind: "unauthorized" }
+      if(response.data.error){
+        if(response.data.error == 'invalid_grant') return { auth: false, error: 'Şifrenizi hatalı girdiniz.' };
+
+
+      }
     }
   }
 }

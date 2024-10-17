@@ -70,6 +70,11 @@ export const AuthenticationStoreModel = types
     },
     logout() {
       store.isAuthenticatedP = false
+      store.grantType = 'client_credentials'
+      store.authToken = undefined
+      store.refreshToken = undefined
+      store.expiresIn = undefined
+
     },
   }))
 

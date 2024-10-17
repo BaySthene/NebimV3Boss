@@ -72,15 +72,11 @@ const AppStack = observer(function AppStack() {
       if(expiresIn != "Invalid Date") {
         if(Date.now() > new Date(expiresIn).getTime()) {
           getNewToken(refreshToken)
-        }else {
-          setIsAuthenticated(false)
         }
       }else {
         changeAccount();
         setIsAuthenticated(false)
       }
-      // @ts-ignore
-
     }else {
       changeAccount();
       setIsAuthenticated(false)
@@ -90,7 +86,7 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "Dashboard" : "Login"}
+      initialRouteName={isAuthenticated ? "InsideNavigator" : "Login"}
     >
       {isRegistered ? (
         <>

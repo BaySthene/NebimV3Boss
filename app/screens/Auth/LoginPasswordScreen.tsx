@@ -19,6 +19,7 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
   const $drawerInsets = useSafeAreaInsetsStyle(["top","bottom"])
 
   const [authPassword, setAuthPassword] = useState("")
+  const [authPasswordError, setAuthPasswordError] = useState("");
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [loginButtonToggle, setLoginButtonToggle] = useState(true)
   const {
@@ -27,15 +28,22 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
 
   async function loginHandle() {
     setLoginButtonToggle(false)
+    setAuthPasswordError('')
     await authController.PostLogin(authPassword, authEmail).then((res) => {
-      setLoginButtonToggle(true)
-      setUserId(res.userId)
-      setRefreshToken(res.refresh_token)
-      setAuthToken(res.access_token)
-      setExpireIn(new Date(Date.now() + res.expires_in * 1000).toString())
-      setAuthAvatar(res.avatar)
-      setAuthFullName(res.fullName)
-      setIsAuthenticated(true)
+      if(!res.auth) {
+        setAuthPasswordError(res.error)
+        setLoginButtonToggle(true)
+      }else {
+        setLoginButtonToggle(true)
+        setUserId(res.userId)
+        setRefreshToken(res.refresh_token)
+        setAuthToken(res.access_token)
+        setExpireIn(new Date(Date.now() + res.expires_in * 1000).toString())
+        setAuthAvatar(res.avatar)
+        setAuthFullName(res.fullName)
+        setIsAuthenticated(true)
+      }
+
     });
     /*setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
@@ -92,7 +100,9 @@ export const LoginPasswordScreen: FC<LoginPasswordScreenProps> = observer(functi
                 RightAccessory={PasswordRightAccessory}
                 inputWrapperStyle={{ alignItems: 'center'}}
                 autoFocus
-                keyboardType="visible-password"
+                helper={authPasswordError}
+                HelperTextProps={{style: { color: colors.error, fontSize: 13 }}}
+
               />
               {
                 loginButtonToggle ? (

@@ -27,6 +27,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     authenticationStore: { refreshToken, authToken, expiresIn, authTaxId, authEmail, userId , setAuthEmail,setAuthTaxId, setAuthToken, setGrantType, setUserId, setRefreshToken, setExpireIn},
   } = useStores()
   const {userPreInfo, userPreInfoLoading, userPreInfoError} = useUserPreInfo(refreshToken, authToken, userId, expiresIn);
+
   const changeLanguageHandle = async () => {
     if(language === 'tr'){
       await changeLanguage('en')
@@ -56,6 +57,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   };
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <Screen
       preset="scroll"
@@ -74,17 +77,23 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           {
 
             !userPreInfoLoading ? (
-              <>
-                <Animated.Image style={{ width: 120, height: 120, marginVertical: spacing.md }} borderRadius={60}
-                                source={{ uri: userPreInfo.avatar }}
-                                resizeMode="cover" />
+              userPreInfoError == '' ? (
+                <>
+                  <Animated.Image style={{ width: 120, height: 120, marginVertical: spacing.md }} borderRadius={60}
+                                  source={{ uri: userPreInfo.avatar }}
+                                  resizeMode="cover" />
 
-                <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText" style={$welcomeText} />
-                <Animated.Text testID="login-heading" style={$presets.heading}>{userPreInfo.fullName} </Animated.Text>
-                <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"
-                        onPress={handlePress} />
-                <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" onPress={changeAccount}/>
-              </>
+                  <Text testID="login-heading" preset="subheading" tx="loginScreen.welcomeText" style={$welcomeText} />
+                  <Animated.Text testID="login-heading" style={$presets.heading}>{userPreInfo.fullName} </Animated.Text>
+                  <Button style={{ marginVertical: spacing.md }} preset="reversed" tx="loginScreen.tapToSignIn"
+                          onPress={handlePress} />
+                  <Text testID="login-heading" preset="formHelper" tx="loginScreen.changeAccount" onPress={changeAccount}/>
+                </>
+              ) : (
+                <>
+                  <Text testID="login-heading" preset="subheading" text={userPreInfoError} style={$welcomeText} />
+                </>
+              )
             ) : (
               <>
                 <Animated.View style={{ width: 120, height: 120, marginVertical: spacing.md, borderRadius: 60, backgroundColor: 'white' }} />
