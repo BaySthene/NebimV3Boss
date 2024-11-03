@@ -26,7 +26,7 @@ export const WelcomeBanner = ({fullName}) => {
           </View>
 
         </View>
-        {/*<WelcomeBg width="100%" height={200} style={{ marginTop: -60 }} />*/}
+        <WelcomeBg width="100%" height={200} style={{ marginTop: -60 }} />
       </View>
     </View>
   )

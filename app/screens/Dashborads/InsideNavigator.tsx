@@ -128,14 +128,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
     return () => timeout.current && clearTimeout(timeout.current)
 
   }, [])
-
-
-
-
-
   const $drawerInsets = useSafeAreaInsetsStyle(["top","bottom"])
-
-
   return (
     <Drawer
       open={open}
