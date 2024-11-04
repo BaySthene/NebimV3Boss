@@ -23,12 +23,13 @@ import { CarouselCard } from "app/components/Custom/card/CarouselCard"
 import { GivenPaymentsList } from "app/components/Custom/widget/GivenPaymentsList"
 import { BestAndWorstProduct, BestAndWorstProductDataType } from "app/components/Custom/widget/BestAndWorstProduct"
 import { AgendaDataType, FinancialCalendar } from "app/components/Custom/widget/FinancialCalendar"
+import { authController } from "app/services/api/auth/authController"
+import { widgetController } from "app/services/api/widget/widgetController"
 interface InsideNavigatorScreenProps extends AppStackScreenProps<"InsideNavigator"> {}
 export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(function InsideNavigatorScreen(_props) {
   const {
-    authenticationStore: { authAvatar, authFullName, expiresIn },
+    authenticationStore: { authAvatar, authFullName, expiresIn, authToken, authTaxId },
   } = useStores()
-  console.log(expiresIn)
   const data = [
     [{ label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 }],
     [{ label: 'pzt', value: 112 }, { label: 'sl', value: 322 }, { label: 'crs', value: 231 }, { label: 'prs', value: 8329 }, { label: 'cm', value: 1234 }, { label: 'cmt', value: 100 }, { label: 'pz', value: 10000 }],
@@ -117,6 +118,7 @@ export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(fu
   const animatedValue = useSharedValue(0);
 
   useEffect(() => {
+
     animatedValue.value = withRepeat(
       withSequence(
         withSpring(1, { damping: 4, stiffness: 30 }),

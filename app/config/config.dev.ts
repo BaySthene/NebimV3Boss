@@ -7,4 +7,5 @@
  */
 export default {
   API_URL: "http://83.150.214.138:18502/",
+  API_WIDGET_URL: "http://83.150.214.138:18503",
 }
