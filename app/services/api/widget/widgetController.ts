@@ -34,13 +34,18 @@ export class WidgetController {
     const payload = {
       taxId: taxId,
     };
+    try {
+      return await this.apisauce.get(
+        `/api/widget/getwelcomebannerdatafromcompanydatabase`,
+        payload,
+        { headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` } }
+      );
+    }catch (e) {
+      const error = "Widget bilgileri çekilirken bir hata ile karşılaşıldı sunucuya erişim olmayabilir.";
+      return error;
+    }
 
-    const response: ApiResponse<any> = await this.apisauce.get(
-      `/api/widget/getwelcomebannerdatafromcompanydatabase`,
-      payload,
-      { headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` } }
-    );
-    return response;
+
   }
 
 

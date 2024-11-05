@@ -19,12 +19,16 @@ export const WelcomeBanner = ({fullName}) => {
     setWelcomeWidgetLoading(false)
     async function getWelcomeBannerData(authToken, authTaxId) {
       await widgetController.getWelcomeBannerData(authToken, authTaxId).then((res) =>{
-        if(res.status == null) {
-          setWelcomeWidgetError('Widget Verisi Çekilirken Bir Hata İle Karşılaşıldı')
-        }else{
-          setSales(res.data.sales);
-          setSalesCount(res.data.salesCount);
-          setWelcomeWidgetLoading(true);
+        if(res.data == null) {
+          setWelcomeWidgetError("Widget verisi çekilirken bir hata ile karşılaşıldı sunucuya erişim olmayabilir");
+        }else {
+          if(res.data.error != null) {
+            setWelcomeWidgetError(res.data.error);
+          }else{
+            setSales(res.data.data.sales);
+            setSalesCount(res.data.data.salesCount);
+            setWelcomeWidgetLoading(true);
+          }
         }
       })
     }
