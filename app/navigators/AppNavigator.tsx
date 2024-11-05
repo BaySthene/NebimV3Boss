@@ -14,6 +14,7 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 import { DashboardParamList } from "app/screens"
 import { authController } from "app/services/api/auth/authController"
+import { DashboardNavigator, DashboardNavigatorParamList } from "app/navigators/DashboardNavigator"
 
 export type LoginPasswordScreenParams = {
   LoginPassword: {
@@ -32,8 +33,7 @@ export type AppStackParamList = {
   Register: undefined,
   VerifyRegister: undefined,
   RegisterParams: undefined,
-  Dashboard: DashboardParamList
-  InsideNavigator: undefined,
+  DashboardNavigator: DashboardNavigatorParamList,
 }
 const exitRoutes = Config.exitRoutes
 
@@ -93,8 +93,9 @@ const AppStack = observer(function AppStack() {
           {
             isAuthenticated ? (
               // Dashboard'a yönlendirilecek
+                //<Stack.Screen name="InsideNavigator" component={Screens.InsideNavigatorScreen} />
               <>
-                <Stack.Screen name="InsideNavigator" component={Screens.InsideNavigatorScreen} />
+                <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} />
               </>
             ) : (
               <>

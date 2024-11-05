@@ -1,4 +1,4 @@
-import { AppStackScreenProps } from "app/navigators"
+import { AppStackScreenProps, DashboardScreenProps } from "app/navigators"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Icon, Screen, Text } from "app/components"
@@ -25,7 +25,7 @@ import { BestAndWorstProduct, BestAndWorstProductDataType } from "app/components
 import { AgendaDataType, FinancialCalendar } from "app/components/Custom/widget/FinancialCalendar"
 import { authController } from "app/services/api/auth/authController"
 import { widgetController } from "app/services/api/widget/widgetController"
-interface InsideNavigatorScreenProps extends AppStackScreenProps<"InsideNavigator"> {}
+interface InsideNavigatorScreenProps extends DashboardScreenProps<"InsideNavigator"> {}
 export const InsideNavigatorScreen: FC<InsideNavigatorScreenProps> = observer(function InsideNavigatorScreen(_props) {
   const {
     authenticationStore: { authAvatar, authFullName, expiresIn, authToken, authTaxId },

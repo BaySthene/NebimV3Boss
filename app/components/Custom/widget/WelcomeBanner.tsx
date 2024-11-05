@@ -15,6 +15,7 @@ export const WelcomeBanner = ({fullName}) => {
   const [salesCount, setSalesCount] = useState(0);
   const [welcomeWidgetLoading, setWelcomeWidgetLoading] = useState(false);
   const [welcomeWidgetError, setWelcomeWidgetError] = useState('');
+
   useEffect(() => {
     setWelcomeWidgetLoading(false)
     async function getWelcomeBannerData(authToken, authTaxId) {
@@ -35,6 +36,7 @@ export const WelcomeBanner = ({fullName}) => {
     getWelcomeBannerData(authToken,authTaxId) ;
   }, [])
 
+
   return (
    <>
      {
@@ -48,7 +50,10 @@ export const WelcomeBanner = ({fullName}) => {
                </View>
                <View style={$welcomeBannerCardStatisticView}>
                  <View style={$welcomeBannerCardStatisticDataView}>
-                   <Text preset="subheading">{sales}₺</Text>
+                   <Text preset="subheading">{new Intl.NumberFormat('tr-TR', {
+                     minimumFractionDigits: 2,
+                     maximumFractionDigits: 2
+                   }).format(sales) + ' ₺'}</Text>
                    <Text preset="formHelper" tx="banners.welcome.salesToday" />
                  </View>
                  <View style={$welcomeBannerCardStatisticDataView}>
