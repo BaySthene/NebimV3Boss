@@ -1,12 +1,12 @@
 import { View, ViewStyle } from "react-native"
 import { Text } from "app/components"
-import { GreenArrow } from "assets/svg/GreenArrow"
 import { WelcomeBg } from "assets/svg/WelcomeBg"
 import React, { useEffect, useState } from "react"
 import { colors } from "app/theme"
 import { widgetController } from "app/services/api/widget/widgetController"
 import { useStores } from "app/models"
 
+// @ts-ignore
 export const WelcomeBanner = ({fullName}) => {
   const {
     authenticationStore: { authToken, authTaxId },
@@ -18,7 +18,7 @@ export const WelcomeBanner = ({fullName}) => {
 
   useEffect(() => {
     setWelcomeWidgetLoading(false)
-    async function getWelcomeBannerData(authToken, authTaxId) {
+    async function getWelcomeBannerData(authToken: string | undefined, authTaxId: string) {
       await widgetController.getWelcomeBannerData(authToken, authTaxId).then((res) =>{
         if(res.data == null) {
           setWelcomeWidgetError("Widget verisi çekilirken bir hata ile karşılaşıldı sunucuya erişim olmayabilir");
@@ -63,7 +63,6 @@ export const WelcomeBanner = ({fullName}) => {
                </View>
 
              </View>
-             <WelcomeBg width="100%" height={200} style={{ marginTop: -60 }} />
            </View>
          </View>
        ) : (

@@ -14,8 +14,9 @@ import { Header } from "app/components/Custom/Header"
 import { WelcomeBanner } from "app/components/Custom/widget/WelcomeBanner"
 import { CarouselCard } from "app/components/Custom/card/CarouselCard"
 import { SalesOverviewList } from "app/components/Custom/widget/SalesOverviewList"
-import { colors } from "app/theme"
+import { colors, spacing } from "app/theme"
 import { useStores } from "app/models"
+import { YearlyStatistics } from "app/components/Custom/widget/YearlyStatistics"
 
 interface DashboardScreenSProps extends DashboardScreenProps<"Dashboard"> {}
 
@@ -36,13 +37,11 @@ export const DashboardScreen: FC<DashboardScreenSProps> = observer(function Dash
       <Animated.ScrollView
         nestedScrollEnabled={true}
         scrollEventThrottle={16}
-        contentContainerStyle={{
-        }}
+        contentContainerStyle={$scrollView}
       >
         {/*<DemoCountdown animatedValue={animatedValue} />*/}
-        <View style={$scrollView}>
           <WelcomeBanner fullName={authFullName}/>
-
+          <YearlyStatistics />
           {/*
             <CarouselCard data={data} scrollX={scrollXSalesOverview}>
             <SalesOverviewList data={data} scrollX={scrollXSalesOverview} />
@@ -56,8 +55,6 @@ export const DashboardScreen: FC<DashboardScreenSProps> = observer(function Dash
             </CarouselCard>
             <FinancialCalendar agendaData={agendaDatas} />
             <BestAndWorstProduct data={productData} />*/}
-        </View>
-
 
       </Animated.ScrollView>
 
@@ -67,7 +64,9 @@ export const DashboardScreen: FC<DashboardScreenSProps> = observer(function Dash
 
 const $scrollView: ViewStyle = {
   flexGrow: 1,
-  paddingHorizontal:16,
+  paddingHorizontal:spacing.lg,
+  paddingTop: 16,
+  paddingBottom: 120,
 }
 const $screenContentContainer: ViewStyle = {
   flex: 1

@@ -21,8 +21,9 @@ import { Header } from "app/components/Custom/Header"
 export type DashboardNavigatorParamList = {
   InsideNavigator: undefined,
   Dashboard: undefined,
-  ProductSearch: undefined,
+  ProductSearchScreen: undefined,
   Expense: undefined,
+  BarcodeScanCamera: undefined,
 }
 export type DashboardScreenProps<T extends keyof DashboardNavigatorParamList> = BottomTabScreenProps<
   DashboardNavigatorParamList,
@@ -114,26 +115,33 @@ export const DashboardNavigator = () => {
         contentContainerStyle={$screenContentContainer}
       >
         <Header headerStyle={headerStyle} toggleDrawerHandle={toggleDrawer} avatar={authAvatar} />
-        <Tab.Navigator initialRouteName="Dashboard"  screenOptions={{ headerShown: false, tabBarLabelPosition: 'beside-icon' , tabBarItemStyle:{
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-          }, tabBarStyle: {
+        <Tab.Navigator initialRouteName="Dashboard"  screenOptions={{ headerShown: false, tabBarLabelPosition: 'beside-icon' ,
+          tabBarItemStyle: {
+            flex: 1, // Her bir itemin eşit alan kaplaması için
+            justifyContent: 'center', // Dikey merkezleme
+            alignItems: 'center', // Yatay merkezleme
+
+          },
+          tabBarStyle: {
             borderTopWidth: 0,
-            backgroundColor: colors.bannerBackground,
-            padding: 0,
-            marginHorizontal: spacing.sm,
-            marginBottom: spacing.lg,
-            height: 70,
+            backgroundColor: colors.cardBackground,
+            paddingBottom: 10, // Alt boşluk ekleyerek ikonların düzgün yerleşmesini sağlayabilirsiniz
+            paddingTop: 10,
+            height: 90,
             borderRadius: 25,
-          } }}>
+            position: 'absolute', // iOS'ta tab barı sabitlemek için
+            left: 16,
+            right: 16,
+            bottom: spacing.lg,
+          },
+        }}>
           <Tab.Screen name="Dashboard" component={Screens.DashboardScreen} options={{
             tabBarLabel: 'Ana Sayfa',
             tabBarIcon: ({ color, size }) => (
               <Icon icon="home" color={color} size={size} />
             )
           }} />
-          <Tab.Screen name="ProductSearch" component={Screens.DashboardScreen} options={{
+          <Tab.Screen name="ProductSearchScreen" component={Screens.ProductSearchScreen} options={{
             tabBarLabel: 'Ürün Sorgula',
             tabBarIcon: ({ color, size }) => (
               <Icon icon="search" color={color} size={size} />
@@ -145,6 +153,7 @@ export const DashboardNavigator = () => {
               <Icon icon="recipt" color={color} size={size} />
             )
           }} />
+
         </Tab.Navigator>
       </Screen>
     </Drawer>

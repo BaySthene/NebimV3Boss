@@ -30,13 +30,32 @@ export class WidgetController {
     })
   }
 
-  async getWelcomeBannerData(accessToken: string, taxId: string) : Promise<any> {
+  async getWelcomeBannerData(accessToken: string | undefined, taxId: string) : Promise<any> {
     const payload = {
       taxId: taxId,
     };
     try {
       return await this.apisauce.get(
         `/api/widget/getwelcomebannerdatafromcompanydatabase`,
+        payload,
+        { headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` } }
+      );
+    }catch (e) {
+      const error = "Widget bilgileri çekilirken bir hata ile karşılaşıldı sunucuya erişim olmayabilir.";
+      return error;
+    }
+
+
+  }
+
+  async getSearchProductDetailsData(accessToken: string | undefined, taxId: string, barcode: string) : Promise<any> {
+    const payload = {
+      taxId: taxId,
+      barcode: barcode,
+    };
+    try {
+      return await this.apisauce.get(
+        `/api/widget/getsearchproductdetailsfromcompanydatabase`,
         payload,
         { headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` } }
       );

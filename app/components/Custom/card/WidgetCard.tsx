@@ -12,7 +12,7 @@ export interface WidgetCardProps extends ViewProps{
 }
 export const WidgetCard: React.FC<WidgetCardProps> = ({children,title,subTitle,headerShown = true, ...viewProps}) => {
   return (
-    <View {...viewProps} style={$widgetCard}>
+    <View {...viewProps} style={[viewProps.style, $widgetCard]}>
       {
         headerShown
         &&

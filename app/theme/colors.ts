@@ -33,6 +33,9 @@ const palette = {
 
   angry100: "#F2D6CD",
   angry500: "#C03403",
+  angry0500: "rgba(192,52,3,0.76)",
+
+
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
@@ -84,6 +87,7 @@ export const colors = {
    * Error messages.
    */
   error: palette.angry500,
+  errorLowOpacity: palette.angry0500,
   /**
    * Error Background.
    *

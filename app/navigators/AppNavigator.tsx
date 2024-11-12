@@ -12,9 +12,10 @@ import Config from "../config"
 import { useStores } from "../models"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-import { DashboardParamList } from "app/screens"
+import { BarcodeScanCameraScreen, DashboardParamList } from "app/screens"
 import { authController } from "app/services/api/auth/authController"
 import { DashboardNavigator, DashboardNavigatorParamList } from "app/navigators/DashboardNavigator"
+import { BarcodeResultScreen } from "app/screens/Search/BarcodeResultScreen"
 
 export type LoginPasswordScreenParams = {
   LoginPassword: {
@@ -34,6 +35,8 @@ export type AppStackParamList = {
   VerifyRegister: undefined,
   RegisterParams: undefined,
   DashboardNavigator: DashboardNavigatorParamList,
+  BarcodeScanCamera: undefined,
+  BarcodeResult: { barcode: string },
 }
 const exitRoutes = Config.exitRoutes
 
@@ -86,7 +89,7 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "InsideNavigator" : "Login"}
+      initialRouteName={isAuthenticated ? "DashboardNavigator" : "Login"}
     >
       {isRegistered ? (
         <>
@@ -96,6 +99,8 @@ const AppStack = observer(function AppStack() {
                 //<Stack.Screen name="InsideNavigator" component={Screens.InsideNavigatorScreen} />
               <>
                 <Stack.Screen name="DashboardNavigator" component={DashboardNavigator} />
+                <Stack.Screen name="BarcodeScanCamera" component={BarcodeScanCameraScreen}  />
+                <Stack.Screen name="BarcodeResult" component={BarcodeResultScreen}  />
               </>
             ) : (
               <>

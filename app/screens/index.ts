@@ -12,4 +12,6 @@ export * from "./Auth/VerifyRegisterScreen"
 export * from "./Auth/RegisterParamsScreen"
 export * from "./Dashborads/InsideNavigator"
 export * from "./Dashborads/Dashboard"
+export * from "./Search/ProductSearch";
+export * from "./Search/BarcodeScanCameraScreen"
 // export other screens here

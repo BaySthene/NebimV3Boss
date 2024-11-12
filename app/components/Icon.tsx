@@ -114,6 +114,14 @@ export const iconRegistry = {
   home: require("../../assets/icons/home.png"),
   search: require("../../assets/icons/search.png"),
   recipt: require("../../assets/icons/recipt.png"),
+  scanner: require("../../assets/icons/scanner.png"),
+  history: require("../../assets/icons/history.png"),
+  torch: require("../../assets/icons/torch.png"),
+  send: require("../../assets/icons/send.png"),
+  noPhoto: require("../../assets/icons/no-photo.png"),
+  copy: require("../../assets/icons/copy.png"),
+  searchFile: require("../../assets/icons/search-file.png"),
+  close: require("../../assets/icons/close.png"),
 }
 
 const $imageStyleBase: ImageStyle = {
