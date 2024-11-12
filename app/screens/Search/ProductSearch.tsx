@@ -20,7 +20,14 @@ export const ProductSearchScreen: FC<DashboardScreenSProps> = observer(function 
   let searchIcon: IconTypes = 'scanner';
 
   const productScanHandle = async () => {
-        navigation.navigate("BarcodeScanCamera");
+        const perm = requestPermission().then((res) => {
+          if(res.status === 'granted'){
+            navigation.navigate("BarcodeScanCamera");
+          }else {
+            console.log('İzin Verilmedi')
+          }
+        });
+
   }
 
   const insets = useSafeAreaInsets();
