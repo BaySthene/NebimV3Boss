@@ -13,6 +13,7 @@ import { colors, spacing } from "app/theme"
 import { useStores } from "app/models"
 import { widgetController } from "app/services/api/widget/widgetController"
 import { SearchProductDetail } from "app/components/Custom/widget/SearchProductDetail"
+import { SearchProductInventory } from "app/components/Custom/widget/SearchProductInventory"
 
 interface BarcodeResultScreenProps extends AppStackScreenProps<"BarcodeResult"> {}
 
@@ -24,15 +25,23 @@ export const BarcodeResultScreen: FC<BarcodeResultScreenProps> = observer(functi
   } = useStores()
   const [productDetailData, setProductDetailData] = useState({});
   const [productDetailDataLoading, setProductDetailDataLoading] = useState(false);
+  const [productInventoryData, setProductInventoryData] = useState({});
+  const [productInventoryDataLoading, setProductInventoryDataLoading] = useState(false);
 
 
   const { barcode } = route.params;
   useEffect(() => {
     setProductDetailDataLoading(false);
+    setProductInventoryDataLoading(false)
     async function getSearchProductDetailsData(accessToken, taxId, barcode) : Promise<any> {
       await widgetController.getSearchProductDetailsData(accessToken, taxId, barcode).then((res) => {
         setProductDetailData(res.data)
         setProductDetailDataLoading(true);
+      })
+
+      await widgetController.getSearchProductInventoryData(accessToken, taxId, barcode).then((res) => {
+        setProductInventoryData(res.data)
+        setProductInventoryDataLoading(true)
       })
     }
 
@@ -96,115 +105,15 @@ export const BarcodeResultScreen: FC<BarcodeResultScreenProps> = observer(functi
           )
         }
 
-        { /* Envanter Kapsayıcı View'i Başlangıcı */}
-        <View style={{
-          marginBottom: spacing.xl,
-        }}>
-
-          <Text preset="subheading" style={{ marginTop: spacing.md }}>Envanter</Text>
-
-          { /* Envanter Başlık Kısmı Başlangıcı */ }
-          <View style={{
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            backgroundColor: colors.cardBackground,
-            marginTop: spacing.md,
-            marginBottom: spacing.xxs,
-            borderRadius: spacing.md,
-            flexDirection: 'row',
-          }}>
-            <Text preset="bold" style={{ textAlign: 'center', width: '25%', borderRightWidth: 1, borderColor: colors.background }}>Renk</Text>
-            <Text preset="bold" style={{ textAlign: 'center', width: '75%' }}>Envanter</Text>
-
-          </View>
-          { /* Envanter Başlık Kısmı Bitişi */ }
-
-          { /* Envanter Renk Gösterimi Kapsayıcı View'i Başlangıcı */ }
-          <View style={{
-            paddingHorizontal: spacing.md,
-            paddingVertical: spacing.sm,
-            backgroundColor: colors.cardBackground,
-            borderRadius: spacing.md,
-            borderColor: colors.background, borderBottomWidth: 1,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            marginBottom: spacing.xxs,
-          }}>
-            { /* Envanter Renk Gösterimi Row'u Başlangıcı */ }
-            <Text preset="formLabel" style={{ textAlign: 'center', width: '25%', borderRightWidth: 1, borderColor: colors.background }}>Kardinal Kırmızısı</Text>
-            <View style={{ width: '75%', alignItems: 'center', justifyContent: 'center' }}>
-              <Text preset="formLabel" style={{ textAlign: 'center' }}>15</Text>
-            </View>
-            { /* Envanter Renk Gösterimi Row'u Bitişi */ }
-
-            { /* Envanter Depo Gösterimi Row'u Başlangıcı */ }
-            <View style={{
-              width: '100%',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              marginTop: spacing.sm,
-              borderTopWidth: 1,
-              borderColor: colors.background,
-            }}>
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ width: '25%', borderRightWidth: 1, borderColor: colors.background }} />
-                <View style={{ flexDirection: 'row', width: '75%', flexWrap: 'wrap' }}>
-                  <View style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    borderBottomWidth: 1,
-                    borderColor: colors.background,
-                    alignItems: 'center',
-                    paddingVertical: spacing.xxs
-                  }}>
-                    <Text preset="formLabel" style={{ textAlign: 'center', width: '33%', borderRightWidth: 1, borderColor: colors.background  }}>Derince Depo</Text>
-                    <Text preset="formLabel" style={{ textAlign: 'center', width: '33%', borderRightWidth: 1, borderColor: colors.background }}>Echol Fashion Satış Alanı</Text>
-                    <Text preset="formLabel" style={{ textAlign: 'center', width: '33%' }}>Merkez Dağıtım Deposu</Text>
-                  </View>
-
-                </View>
-              </View>
-
-            </View>
-            { /* Envanter Depo Gösterimi Row'u Bitişi */ }
+        {
+          productInventoryDataLoading ? (
+            <SearchProductInventory productInventoryData={productInventoryData} />
+          ) : (
+           <></>
+          )
+        }
 
 
-            { /* Envanter Varyant Bazlı Envanter Gösterimi Depolar Yan Yana Başlangıcı */ }
-            <View style={{
-              width: '100%',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}>
-              <View style={{ flexDirection: 'row',}}>
-                <View style={{ width: '25%', height: 'auto', alignItems: 'center', justifyContent: 'center', borderRightWidth: 1, borderColor: colors.background, borderTopWidth: 1 }}>
-                  <Text preset="formLabel" style={{ textAlign: 'center',  }}>XS</Text>
-                </View>
-                <View style={{ flexDirection: 'row', width: '75%', flexWrap: 'wrap' }}>
-                  <View style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    borderColor: colors.background,
-                    alignItems: 'center',
-                    paddingVertical: spacing.xxs
-                  }}>
-                    <Text preset="formLabel" style={{ textAlign: 'center', width: '33%', borderRightWidth: 1, borderColor: colors.background  }}>3</Text>
-                    <Text preset="formLabel" style={{ textAlign: 'center', width: '33%', borderRightWidth: 1, borderColor: colors.background }}>12</Text>
-                    <Text preset="formLabel" style={{ textAlign: 'center', width: '33%' }}>0</Text>
-                  </View>
-                </View>
-              </View>
-
-            </View>
-            { /* Envanter Varyant Bazlı Envanter Gösterimi Depolar Yan Yana Bitişi */ }
-
-
-
-
-          </View>
-          { /* Envanter Renk Gösterimi Kapsayıcı View'i Bitişi */ }
-
-        </View>
-        { /* Envanter Kapsayıcı View'i Bitişi */}
 
 
 

@@ -2,6 +2,7 @@
   "name": "NebimV3Portal",
   "displayName": "NebimV3Portal",
   "expo": {
+    "newArchEnabled": true,
     "name": "NebimV3Portal",
     "slug": "NebimV3Portal",
     "scheme": "nebimv3portal",

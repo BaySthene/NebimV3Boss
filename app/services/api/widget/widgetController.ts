@@ -68,6 +68,26 @@ export class WidgetController {
   }
 
 
+  async getSearchProductInventoryData(accessToken: string | undefined, taxId: string, barcode: string) : Promise<any> {
+    const payload = {
+      taxId: taxId,
+      barcode: barcode,
+    };
+    try {
+      return await this.apisauce.get(
+        `/api/widget/getsearchproductinventoryfromcompanydatabase`,
+        payload,
+        { headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` } }
+      );
+    }catch (e) {
+      const error = "Widget bilgileri çekilirken bir hata ile karşılaşıldı sunucuya erişim olmayabilir.";
+      return error;
+    }
+
+
+  }
+
+
 }
 
 export const widgetController = new WidgetController()
